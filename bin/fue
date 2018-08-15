@@ -9,6 +9,7 @@ class App
   program_desc "Find a Github user's e-mail address."
 
   switch %i[v verbose], desc: 'Produce verbose output.', default_value: false
+  flag %i[t token], desc: 'Github access token.', default_value: ENV['GITHUB_ACCESS_TOKEN']
 
   arguments :strict
   subcommand_option_handling :normal
@@ -25,7 +26,6 @@ class App
   arg 'username'
   command :find do |c|
     c.flag %i[d depth], desc: 'Maximum search depth.', default_value: 10
-    c.flag %i[t token], required: true, desc: 'Github access token.', default_value: ENV['GITHUB_ACCESS_TOKEN']
     c.action do |global_options, options, args|
       username = args.first
       puts "Searching for e-mail address for '#{username}' at max depth of #{options[:depth]} ..." if global_options[:verbose]
