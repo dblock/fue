@@ -6,6 +6,8 @@ Fue
 
 Find an e-mail address of a Github user from their commit log.
 
+![](images/fue.gif)
+
 ## Usage
 
 ```
