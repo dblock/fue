@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+require 'gli'
+require 'fue'
+require 'graphlient'
+
+class App
+  extend GLI::App
+
+  program_desc "Find a Github user's e-mail address."
+
+  switch %i[v verbose], desc: 'Produce verbose output.', default_value: false
+
+  arguments :strict
+  subcommand_option_handling :normal
+
+  pre do |global_options, _command, options, _args|
+    options = global_options.dup
+    token = options.delete(:token)
+    $fue = Fue::Finder.new(token, options)
+  end
+
+  default_command :help
+
+  desc "Find a Github user's e-mail address."
+  arg 'username'
+  command :find do |c|
+    c.flag %i[d depth], desc: 'Maximum search depth.', default_value: 10
+    c.flag %i[t token], required: true, desc: 'Github access token.', default_value: ENV['GITHUB_ACCESS_TOKEN']
+    c.action do |global_options, options, args|
+      username = args.first
+      puts "Searching for e-mail address for '#{username}' at max depth of #{options[:depth]} ..." if global_options[:verbose]
+      puts $fue.emails(options.merge(username: username))
+      exit_now! nil, 0
+    end
+  end
+end
+
+exit App.run(ARGV)
