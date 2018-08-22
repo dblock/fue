@@ -6,6 +6,8 @@ Fue
 
 Find an e-mail address of a Github user from their commit log.
 
+Fue is short for "Finding Unicorn Engineers".
+
 ![](images/fue.gif)
 
 ## Usage
