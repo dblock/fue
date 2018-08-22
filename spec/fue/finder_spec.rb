@@ -15,19 +15,23 @@ describe Fue::Finder do
 
   it 'adjusts depth and breadth' do
     expect(finder).to receive(:author_id).and_return('id')
-    data = RecursiveOpenStruct.new(
-      data: {
-        user: {
-          repositories: {
-            edges: []
-          }
-        }
-      }
-    )
     expect(finder.send(:graphql_client)).to receive(:query).with(
       kind_of(String),
       hash_including(depth: 1, breadth: 2)
-    ).and_return(data)
+    ).and_return(nil)
     finder.emails(username: 'defunkt', depth: 1, breadth: 2)
+  end
+
+  it 'paginates over more than 100 items' do
+    expect(finder).to receive(:author_id).and_return('id')
+    expect(finder.send(:graphql_client)).to receive(:query).with(
+      kind_of(String),
+      hash_including(depth: 1, breadth: 100)
+    ).and_return(nil)
+    expect(finder.send(:graphql_client)).to receive(:query).with(
+      kind_of(String),
+      hash_including(depth: 1, breadth: 42)
+    ).and_return(nil)
+    finder.emails(username: 'defunkt', depth: 1, breadth: 142)
   end
 end
