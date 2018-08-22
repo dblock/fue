@@ -7,6 +7,7 @@ class App
   extend GLI::App
 
   program_desc "Find a Github user's e-mail address."
+  version Fue::VERSION
 
   switch %i[v verbose], desc: 'Produce verbose output.', default_value: false
   flag %i[t token], desc: 'Github access token.', default_value: ENV['GITHUB_ACCESS_TOKEN']

@@ -12,6 +12,10 @@ describe Fue do
         help = `"#{fue}" help`
         expect(help).to include "fue - Find a Github user's e-mail address."
       end
+      it 'displays version' do
+        help = `"#{fue}"`
+        expect(help).to include Fue::VERSION
+      end
     end
   end
 end
