@@ -2,4 +2,7 @@ AllCops:
   Exclude:
     - vendor/**/*
 
+Metrics:
+  Enabled: false
+
 inherit_from: .rubocop_todo.yml

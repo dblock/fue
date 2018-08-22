@@ -25,10 +25,17 @@ class App
   desc "Find a Github user's e-mail address."
   arg 'username'
   command :find do |c|
-    c.flag %i[d depth], desc: 'Maximum search depth.', default_value: 10
+    c.flag %i[d depth], desc: 'Maximum search depth in each repository.', default_value: 1
+    c.flag %i[b breadth], desc: 'Maximum number of repositories to search.', default_value: 10
     c.action do |global_options, options, args|
       username = args.first
-      puts "Searching for e-mail address for '#{username}' at max depth of #{options[:depth]} ..." if global_options[:verbose]
+      options[:depth] = options[:depth].to_i
+      options[:breadth] = options[:breadth].to_i
+      if global_options[:verbose]
+        puts "Searching for e-mail address for '#{username}' " \
+             "in the first #{options[:depth].to_i > 1 ? "#{options[:depth]} commits" : 'commit'} " \
+             "of #{options[:breadth]} most recent repositor#{options[:breadth] == 1 ? 'y' : 'ies'} ..."
+      end
       puts $fue.emails(options.merge(username: username))
       exit_now! nil, 0
     end

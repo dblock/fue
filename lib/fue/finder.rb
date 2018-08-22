@@ -19,15 +19,15 @@ module Fue
 
     def emails(options = {})
       query = <<-GRAPHQL
-        query($login: String!, $author_id: ID!, $depth: Int!) {
+        query($login: String!, $author_id: ID!, $depth: Int!, $breadth: Int!) {
           user(login: $login) {
-            repositories(last: $depth, isFork:false, privacy: PUBLIC) {
+            repositories(last: $breadth, isFork:false, privacy: PUBLIC) {
               edges {
                 node {
                   defaultBranchRef {
                     target {
                       ... on Commit {
-                        history(first: 1, author: { id: $author_id }) {
+                        history(first: $depth, author: { id: $author_id }) {
                           nodes {
                             author {
                               email
@@ -48,7 +48,8 @@ module Fue
       query_options = {
         login: options[:username],
         author_id: author_id(options[:username]),
-        depth: (options[:depth] || 10).to_i
+        depth: options[:depth],
+        breadth: options[:breadth]
       }
 
       graphql_client.query(query, query_options).data.user.repositories.edges.map do |edge|

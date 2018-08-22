@@ -33,10 +33,10 @@ Chris Wanstrath <chris@github.com>
 
 #### Specify More Depth
 
-By default the code looks at the last 10 repos. You can have more depth, up to 100 (a limit enforced by Github).
+By default the code looks at 1 commit from the last 10 repos. You can look at more repositories (breadth) and more commits (depth). The maximum value for both parameters is enforced by Github and can be set up to 100.
 
 ```
-GITHUB_ACCESS_TOKEN=token fue find --depth=100 defunkt
+GITHUB_ACCESS_TOKEN=token fue find --breadth=100 --depth=5 defunkt
 
 Chris Wanstrath <chris@ozmm.org>
 Chris Wanstrath <chris@github.com>
