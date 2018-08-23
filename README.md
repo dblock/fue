@@ -16,16 +16,12 @@ Fue is short for "Finding Unicorn Engineers".
 gem install fue
 ```
 
-#### Get a Github Access Token
-
-Obtain a Github access token from [here](https://github.com/settings/tokens) with `public_repo` permissions. See [help](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line) for more information. Set the token as `GITHUB_ACCESS_TOKEN`.
-
 #### Find Someone's Email
 
 The `find` command looks through user's initial repo commits.
 
 ```
-GITHUB_ACCESS_TOKEN=token fue find defunkt
+$ fue find defunkt
 
 Chris Wanstrath <chris@ozmm.org>
 Chris Wanstrath <chris@github.com>
@@ -36,7 +32,7 @@ Chris Wanstrath <chris@github.com>
 By default the code looks at 1 commit from the last 10 repos. You can look at more repositories (breadth) and more commits (depth). The maximum value for depth is 100, enforced by Github. Fue will iterate over a number of repositories larger than 100.
 
 ```
-GITHUB_ACCESS_TOKEN=token fue find --breadth=100 --depth=5 defunkt
+$ fue find --breadth=100 --depth=5 defunkt
 
 Chris Wanstrath <chris@ozmm.org>
 Chris Wanstrath <chris@github.com>
@@ -50,6 +46,21 @@ fue help
 ```
 
 Displays additional options.
+
+#### Access Tokens
+
+Fue will prompt you for Github credentials and 2FA, if enabled.
+
+```
+$ fue find defunkt
+Enter dblock's GitHub password (never stored): ******************
+Enter GitHub 2FA code: ******
+Token saved to keychain.
+```
+
+The access token will be generated with `public_repo` scope and stored in the keychain. It can be later deleted from [here](https://github.com/settings/tokens). You can also skip the prompts and use a previously obtained token with `-t` or by setting the `GITHUB_ACCESS_TOKEN` environment variable.
+
+See [Creating a Personal Access Token for the Command Line](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line) for more information about personal tokens.
 
 ## Contributing
 

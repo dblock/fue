@@ -8,7 +8,6 @@ require 'tmpdir'
 require 'fue'
 require 'English'
 require 'webmock/rspec'
-require 'graphlient'
 require 'recursive-open-struct'
 
 RSpec.configure(&:raise_errors_for_deprecations!)

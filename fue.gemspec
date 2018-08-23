@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
   s.homepage = 'http://github.com/dblock/fue'
   s.licenses = ['MIT']
   s.summary = 'Find an e-mail address of a Github user.'
+  s.add_dependency 'github_api'
   s.add_dependency 'gli'
   s.add_dependency 'graphlient', '~> 0.3.2'
 end

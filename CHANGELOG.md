@@ -1,5 +1,6 @@
 ### 0.2.1 (Next)
 
+* [#2](https://github.com/dblock/fue/issues/2): Prompt to authenticate with Github - [@dblock](https://github.com/dblock).
 * [#7](https://github.com/dblock/fue/issues/7): Display version - [@dblock](https://github.com/dblock).
 * Your contribution here.
 

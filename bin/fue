@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 require 'gli'
 require 'fue'
-require 'graphlient'
 
 class App
   extend GLI::App
@@ -11,13 +10,14 @@ class App
 
   switch %i[v verbose], desc: 'Produce verbose output.', default_value: false
   flag %i[t token], desc: 'Github access token.', default_value: ENV['GITHUB_ACCESS_TOKEN']
+  flag %i[u username], desc: 'Guthub username.', default_value: Fue::Auth.username
 
   arguments :strict
   subcommand_option_handling :normal
 
   pre do |global_options, _command, options, _args|
     options = global_options.dup
-    token = options.delete(:token)
+    token = options.delete(:token) || Fue::Auth.token
     $fue = Fue::Finder.new(token, options)
   end
 
