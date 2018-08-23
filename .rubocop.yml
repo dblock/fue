@@ -2,6 +2,9 @@ AllCops:
   Exclude:
     - vendor/**/*
 
+Style/Documentation:
+  Enabled: false
+
 Metrics:
   Enabled: false
 

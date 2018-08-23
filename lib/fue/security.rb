@@ -2,11 +2,11 @@ module Fue
   module Security
     class << self
       def store!(options)
-        system!(security('add', options))
+        Fue::Shell.system!(security('add', options))
       end
 
       def get(options)
-        system!(security('find', options))
+        Fue::Shell.system!(security('find', options))
       rescue RuntimeError
         nil
       end
@@ -34,12 +34,6 @@ module Fue
         rescue StandardError
           'security'
         end
-      end
-
-      def system!(*cmd)
-        stdout, _, status = Open3.capture3(*cmd)
-        raise "failed with exit code #{status}" unless status.success?
-        stdout.slice!(0..-(1 + $INPUT_RECORD_SEPARATOR.size))
       end
     end
   end
