@@ -14,9 +14,9 @@ module Fue
 
       def username
         @username ||= begin
-          `git config github.user`.chomp
-        rescue StandardError
-          get_username
+          username = `git config github.user`.chomp
+          username = get_username if username.empty?
+          username
         end
       end
 
