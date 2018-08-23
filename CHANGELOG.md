@@ -1,3 +1,7 @@
+### 0.2.2 (Next)
+
+* Your contribution here.
+
 ### 0.2.1 (2018/8/23)
 
 * [#2](https://github.com/dblock/fue/issues/2): Prompt to authenticate with Github - [@dblock](https://github.com/dblock).
