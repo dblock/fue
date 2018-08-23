@@ -17,7 +17,7 @@ module Fue
 
     def username
       @username ||= begin
-        username = Fue::Shell.system!('git config github.user')
+        username = get_git_username
         username.chomp! if username
         username = get_username if username.nil? || username.empty?
         username
@@ -25,6 +25,12 @@ module Fue
     end
 
     private
+
+    def get_git_username
+      Fue::Shell.system!('git config github.user')
+    rescue RuntimeError
+      nil
+    end
 
     def github_token(code = nil)
       github(code).auth.create(scopes: ['public_repo'], note: note).token
