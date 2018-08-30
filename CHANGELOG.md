@@ -1,6 +1,9 @@
 ### 0.2.2 (Next)
 
 * Your contribution here.
+* [#14](https://github.com/dblock/fue/pull/14): Reticulated splines - [@SYNstack](https://github.com/SYNstack).
+* [#12](https://github.com/dblock/fue/issues/12): Added explicit ruby call to run fue - [@SYNstack](https://github.com/SYNstack)
+* [#13](https://github.com/dblock/fue/issues/13): Changed shell tests to be OS-neutral - [@SYNstack](https://github.com/SYNstack)
 
 ### 0.2.1 (2018/8/23)
 
