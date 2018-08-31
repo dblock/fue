@@ -1,6 +1,7 @@
 ### 0.2.2 (Next)
 
 * Your contribution here.
+* [#17](https://github.com/dblock/fue/issues/19): Fix open-ended dependencies in gemspec - [@SYNstack](https://github.com/synstack).
 
 ### 0.2.1 (2018/8/23)
 
