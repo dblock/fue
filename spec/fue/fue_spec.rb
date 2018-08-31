@@ -5,7 +5,7 @@ describe Fue do
   context 'find' do
     describe 'default' do
       subject do
-        Fue::Shell.system!('ruby ' + fue)
+        Fue::Shell.system!(['ruby', %("#{fue}")].join(' '))
       end
       it 'displays help' do
         expect(subject).to include "fue - Find a Github user's e-mail address."
@@ -16,7 +16,7 @@ describe Fue do
     end
     describe 'help' do
       subject do
-        Fue::Shell.system!(['ruby ' + fue, 'help'].join(' '))
+        Fue::Shell.system!(['ruby', %("#{fue}"), 'help'].join(' '))
       end
       it 'displays help' do
         expect(subject).to include "fue - Find a Github user's e-mail address."
