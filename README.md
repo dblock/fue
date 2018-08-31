@@ -3,6 +3,7 @@ Fue
 
 [![Gem Version](https://badge.fury.io/rb/fue.svg)](https://badge.fury.io/rb/fue)
 [![Build Status](https://travis-ci.org/dblock/fue.svg)](https://travis-ci.org/dblock/fue)
+[![Build status](https://ci.appveyor.com/api/projects/status/github/dblock/fue?branch=master&svg=true)](https://ci.appveyor.com/project/dblock/fue)
 
 Find an e-mail address of a Github user from their commit log.
 
