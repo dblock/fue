@@ -8,4 +8,7 @@ Style/Documentation:
 Metrics:
   Enabled: false
 
+Style/EndOfLine:
+  EnforcedStyle: lf
+
 inherit_from: .rubocop_todo.yml
