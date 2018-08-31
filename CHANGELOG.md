@@ -1,11 +1,8 @@
 ### 0.2.2 (Next)
 
 * Your contribution here.
-<<<<<<< HEAD
+* [#16](https://github.com/dblock/fue/issues/16): Setup Windows CI - [@SYNstack](https://github.com/synstack).
 * [#17](https://github.com/dblock/fue/issues/19): Fix open-ended dependencies in gemspec - [@SYNstack](https://github.com/synstack).
-=======
->>>>>>> Fix: Changed CRLF line endings back to LF
-* [#16](https://github.com/dblock/fue/issues/16): Set up Appveyor for Windows CI - [@SYNstack](https://github.com/synstack).
 ### 0.2.1 (2018/8/23)
 
 * [#2](https://github.com/dblock/fue/issues/2): Prompt to authenticate with Github - [@dblock](https://github.com/dblock).
