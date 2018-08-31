@@ -18,7 +18,7 @@ gem install fue
 
 #### Find Someone's Email
 
-The `find` command looks through user's initial repo commits.
+The `find` command looks through user's initial repository commits.
 
 ```
 $ fue find defunkt
@@ -29,7 +29,7 @@ Chris Wanstrath <chris@github.com>
 
 #### Specify More Depth
 
-By default the code looks at 1 commit from the last 10 repos. You can look at more repositories (breadth) and more commits (depth). The maximum value for depth is 100, enforced by Github. Fue will iterate over a number of repositories larger than 100.
+By default the code looks at 1 commit from the last 10 repositories. You can look at more repositories (breadth) and more commits (depth). The maximum value for depth is 100, enforced by Github. Fue will iterate over a number of repositories larger than 100.
 
 ```
 $ fue find --breadth=100 --depth=5 defunkt
@@ -64,7 +64,7 @@ See [Creating a Personal Access Token for the Command Line](https://help.github.
 
 ## Contributing
 
-There're [a few feature requests and known issues](https://github.com/dblock/fue/issues). Please contribute! See [CONTRIBUTING](CONTRIBUTING.md).
+There are [a few feature requests and known issues](https://github.com/dblock/fue/issues). Please contribute! See [CONTRIBUTING](CONTRIBUTING.md).
 
 ## Copyright and License
 

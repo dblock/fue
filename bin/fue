@@ -5,12 +5,12 @@ require 'fue'
 class App
   extend GLI::App
 
-  program_desc "Find a Github user's e-mail address."
+  program_desc "Find a GitHub user's e-mail address."
   version Fue::VERSION
 
   switch %i[v verbose], desc: 'Produce verbose output.', default_value: false
-  flag %i[t token], desc: 'Github access token.', default_value: ENV['GITHUB_ACCESS_TOKEN']
-  flag %i[u username], desc: 'Guthub username.', default_value: Fue::Auth.instance.username
+  flag %i[t token], desc: 'GitHub access token.', default_value: ENV['GITHUB_ACCESS_TOKEN']
+  flag %i[u username], desc: 'GitHub username.', default_value: Fue::Auth.instance.username
 
   arguments :strict
   subcommand_option_handling :normal
@@ -23,7 +23,7 @@ class App
 
   default_command :help
 
-  desc "Find a Github user's e-mail address."
+  desc "Find a GitHub user's e-mail address."
   arg 'username'
   command :find do |c|
     c.flag %i[d depth], desc: 'Maximum search depth in each repository.', default_value: 1
