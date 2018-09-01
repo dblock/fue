@@ -4,11 +4,11 @@ This project is work of [many contributors](https://github.com/dblock/fue/graphs
 
 You're encouraged to submit [pull requests](https://github.com/dblock/fue/pulls), [propose features and discuss issues](https://github.com/dblock/fue/issues).
 
-In the examples below, substitute your Github username for `contributor` in URLs.
+In the examples below, substitute your GitHub username for `contributor` in URLs.
 
 ### Fork the Project
 
-Fork the [project on Github](https://github.com/dblock/fue) and check out your copy.
+Fork the [project on GitHub](https://github.com/dblock/fue) and check out your copy.
 
 ```
 git clone https://github.com/contributor/fue.git
@@ -47,7 +47,7 @@ We definitely appreciate pull requests that highlight or reproduce a problem, ev
 
 Implement your feature or bug fix.
 
-Ruby style is enforced with [Rubocop](https://github.com/bbatsov/rubocop). Run `bundle exec rubocop` and fix any style issues highlighted, auto-correct issues when possible with `bundle exec rubocop -a`. To silence generally ingored issues, including line lengths or code complexity metrics, run `bundle exec rubocop --auto-gen-config`.
+Ruby style is enforced with [Rubocop](https://github.com/bbatsov/rubocop). Run `bundle exec rubocop` and fix any style issues highlighted, auto-correct issues when possible with `bundle exec rubocop -a`. To silence generally ignored issues, including line lengths or code complexity metrics, run `bundle exec rubocop --auto-gen-config`.
 
 Make sure that `bundle exec rake` completes without errors.
 

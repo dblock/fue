@@ -8,7 +8,7 @@ describe Fue do
         Fue::Shell.system!(fue)
       end
       it 'displays help' do
-        expect(subject).to include "fue - Find a Github user's e-mail address."
+        expect(subject).to include "fue - Find a GitHub user's e-mail address."
       end
       it 'displays version' do
         expect(subject).to include Fue::VERSION
@@ -19,7 +19,7 @@ describe Fue do
         Fue::Shell.system!([fue, 'help'].join(' '))
       end
       it 'displays help' do
-        expect(subject).to include "fue - Find a Github user's e-mail address."
+        expect(subject).to include "fue - Find a GitHub user's e-mail address."
       end
     end
   end

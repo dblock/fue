@@ -67,7 +67,7 @@ module Fue
     end
 
     def get_username
-      print 'Enter GithHub username: '
+      print 'Enter GitHub username: '
       username = $stdin.gets
       username.chomp! if username
       username
