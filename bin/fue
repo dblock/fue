@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
+
 require 'gli'
 require 'fue'
 
@@ -37,7 +39,29 @@ class App
              "in the first #{options[:depth].to_i > 1 ? "#{options[:depth]} commits" : 'commit'} " \
              "of #{options[:breadth]} most recent repositor#{options[:breadth] == 1 ? 'y' : 'ies'} ..."
       end
-      puts $fue.emails(options.merge(username: username))
+      puts $fue.emails(options.merge(username: username, verbose: global_options[:verbose]))
+      exit_now! nil, 0
+    end
+  end
+
+  desc "Find a GitHub repo contributors' e-mail addresses."
+  arg 'repo'
+  command :contributors do |c|
+    c.flag %i[d depth], desc: 'Maximum search depth in each repository for a given user.', default_value: 1
+    c.flag %i[b breadth], desc: 'Maximum number of repositories to search.', default_value: 10
+    c.action do |global_options, options, args|
+      repo = args.first
+      options[:depth] = options[:depth].to_i
+      options[:breadth] = options[:breadth].to_i
+      if global_options[:verbose]
+        puts "Searching for contributors' e-mail addresses in '#{repo}' " \
+             "in the first #{options[:depth].to_i > 1 ? "#{options[:depth]} commits" : 'commit'} " \
+             "of #{options[:breadth]} most recent repositor#{options[:breadth] == 1 ? 'y' : 'ies'} ..."
+      end
+      contributor_emails = $fue.contributors(options.merge(repo: repo, verbose: global_options[:verbose]))
+      contributor_emails.each_pair do |username, emails|
+        puts "#{username}: #{emails.join(', ')}"
+      end
       exit_now! nil, 0
     end
   end

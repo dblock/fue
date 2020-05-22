@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Fue
   module Security
     class << self
@@ -31,8 +33,8 @@ module Fue
       def security_path
         @security_path ||= begin
           `which security`.chomp
-        rescue StandardError
-          'security'
+                           rescue StandardError
+                             'security'
         end
       end
     end

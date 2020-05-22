@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Fue
   class Auth
     def self.instance
@@ -17,8 +19,7 @@ module Fue
 
     def username
       @username ||= begin
-        username = get_git_username
-        username.chomp! if username
+        username = get_git_username&.chomp
         username = get_username if username.nil? || username.empty?
         username
       end
@@ -36,7 +37,7 @@ module Fue
       github(code).auth.create(scopes: ['public_repo'], note: note).token
     rescue Github::Error::Unauthorized => e
       case e.response_headers['X-GitHub-OTP']
-      when /required/ then
+      when /required/
         github_token(get_code)
       else
         raise e
@@ -69,8 +70,7 @@ module Fue
     def get_username
       print 'Enter GitHub username: '
       username = $stdin.gets
-      username.chomp! if username
-      username
+      username&.chomp
     rescue Interrupt => e
       raise e, 'ctrl + c'
     end

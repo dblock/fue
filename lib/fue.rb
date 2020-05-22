@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'graphlient'
 require 'github_api'
 require 'open3'

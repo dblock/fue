@@ -5,7 +5,7 @@ Fue
 [![Build Status](https://travis-ci.org/dblock/fue.svg)](https://travis-ci.org/dblock/fue)
 [![Build status](https://ci.appveyor.com/api/projects/status/github/dblock/fue?branch=master&svg=true)](https://ci.appveyor.com/project/dblock/fue)
 
-Find an e-mail address of a Github user from their commit log.
+Find e-mail addresses of a Github users from their commit logs.
 
 Fue is short for "Finding Unicorn Engineers".
 
@@ -17,16 +17,31 @@ Fue is short for "Finding Unicorn Engineers".
 gem install fue
 ```
 
+### Commands
+
 #### Find Someone's Email
 
 The `find` command looks through user's initial repository commits.
 
 ```
-$ fue find defunkt
+$ fue --verbose find defunkt
 
 Chris Wanstrath <chris@ozmm.org>
 Chris Wanstrath <chris@github.com>
 ```
+
+#### Find a Repo Contributors' Email
+
+The `contributors` command looks through a git log of contributors, then fetches their e-mails.
+
+```
+$ fue --verbose contributors defunkt/colored
+
+defunkt: Chris Wanstrath <chris@ozmm.org>
+kch: Caio Chassot <kch@users.noreply.github.com>
+```
+
+### Options
 
 #### Specify More Depth
 
@@ -40,7 +55,7 @@ Chris Wanstrath <chris@github.com>
 defunkt <chris@ozmm.org>
 ```
 
-#### Get Help
+### Get Help
 
 ```
 fue help
@@ -48,7 +63,7 @@ fue help
 
 Displays additional options.
 
-#### Access Tokens
+### Access Tokens
 
 Fue will prompt you for Github credentials and 2FA, if enabled.
 

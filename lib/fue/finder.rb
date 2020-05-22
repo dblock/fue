@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Fue
   class Finder
     attr_reader :token
@@ -19,24 +21,88 @@ module Fue
 
     def emails(options = {})
       query = <<-GRAPHQL
-        query($login: String!, $author_id: ID!, $depth: Int!, $breadth: Int!, $breadthCursor: String) {
+        query($login: String!, $author_id: ID!, $depth: Int!, $breadth: Int!, $cursor: String) {
           user(login: $login) {
-            repositories(last: $breadth, after: $breadthCursor, isFork:false, privacy: PUBLIC) {
-              edges {
-                cursor
-                node {
-                  defaultBranchRef {
-                    target {
-                      ... on Commit {
-                        history(first: $depth, author: { id: $author_id }) {
-                          nodes {
-                            author {
-                              email
-                              name
-                            }
+            repositories(last: $breadth, after: $cursor, isFork:false, privacy: PUBLIC) {
+              nodes {
+                defaultBranchRef {
+                  target {
+                    ... on Commit {
+                      history(first: $depth, author: { id: $author_id }) {
+                        nodes {
+                          author {
+                            email
+                            name
                           }
                         }
                       }
+                    }
+                  }
+                }
+              }
+              pageInfo {
+                startCursor
+              }
+            }
+          }
+        }
+      GRAPHQL
+
+      # max number of repositories to search
+      max_breadth = options[:breadth] || 10
+
+      query_options = {
+        login: options[:username],
+        author_id: author_id(options[:username]),
+        # max number of commits to look into
+        depth: options[:depth] || 1
+      }
+
+      STDOUT.write "Searching for emails for #{options[:username]} ." if options[:verbose]
+
+      emails = Set.new
+
+      loop do
+        query_options[:breadth] = [max_breadth, 100].min
+        response = graphql_client.query(query, query_options)
+        repositories = response&.data&.user&.repositories
+        repositories&.nodes&.each do |history|
+          master_history = history.default_branch_ref&.target&.history
+          master_history&.nodes&.each do |node|
+            emails << "#{node.author.name} <#{node.author.email}>"
+          end
+        end
+        query_options[:cursor] = repositories&.page_info&.start_cursor
+        break unless query_options[:cursor]
+
+        max_breadth -= 100
+        break if max_breadth <= 0
+
+        STDOUT.write '.' if options[:verbose]
+      end
+
+      puts " found #{emails.size} email address#{emails.size == 1 ? '' : 'es'}." if options[:verbose]
+
+      emails.to_a
+    end
+
+    def contributors(options = {})
+      query = <<-GRAPHQL
+        query($owner: String!, $name: String!, $cursor: String) {
+          repository(owner: $owner, name: $name) {
+            defaultBranchRef {
+              target {
+                ... on Commit {
+                  history(first: 100, after: $cursor) {
+                    nodes {
+                      author {
+                        user {
+                          login
+                        }
+                      }
+                    }
+                    pageInfo {
+                      endCursor
                     }
                   }
                 }
@@ -46,35 +112,38 @@ module Fue
         }
       GRAPHQL
 
-      max_breadth = options[:breadth] || 10
+      repo_owner, repo_name = options[:repo].split('/', 2)
 
       query_options = {
-        login: options[:username],
-        author_id: author_id(options[:username]),
-        depth: options[:depth] || 1
+        owner: repo_owner,
+        name: repo_name
       }
 
-      emails = Set.new
+      logins = Set.new
+
+      STDOUT.write 'Fetching contributors .' if options[:verbose]
 
       loop do
-        query_options[:breadth] = [max_breadth, 100].min
         response = graphql_client.query(query, query_options)
-        edges = response.data.user.repositories.edges if response
-        if edges
-          edges.each do |edge|
-            query_options[:breadthCursor] = edge.cursor
-            branch_ref = edge.node.default_branch_ref
-            next unless branch_ref
-            branch_ref.target.history.nodes.each do |node|
-              emails << "#{node.author.name} <#{node.author.email}>"
-            end
-          end
+        history = response&.data&.repository&.default_branch_ref&.target&.history
+        history&.nodes&.each do |node|
+          login = node.author.user&.login
+          logins << login if login
         end
-        max_breadth -= 100
-        break if max_breadth <= 0
+        query_options[:cursor] = history&.page_info.end_cursor
+        STDOUT.write '.' if options[:verbose]
+        break unless query_options[:cursor]
       end
 
-      emails.to_a
+      puts " found #{logins.size} contributor#{logins.size == 1 ? '' : 's'}." if options[:verbose]
+
+      Hash[logins.map do |login|
+        begin
+          [login, emails(options.merge(username: login))]
+        rescue StandardError => e
+          warn e.to_s
+        end
+      end.compact]
     end
 
     private

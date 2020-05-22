@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'vcr'
 require 'webmock/rspec'
 
@@ -6,4 +8,8 @@ VCR.configure do |config|
   config.hook_into :webmock
   config.default_cassette_options = { record: :new_episodes }
   config.configure_rspec_metadata!
+  config.filter_sensitive_data('api-token') { ENV['GITHUB_ACCESS_TOKEN'] }
+  config.before_record do |i|
+    i.response.body.force_encoding('UTF-8')
+  end
 end

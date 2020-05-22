@@ -1,10 +1,11 @@
-### 0.2.2 (Next)
+### 0.3.0 (Next)
 
-* Your contribution here.
+* [#25](https://github.com/dblock/fue/pull/25): Added `contributors`, find repo contributors' e-mails - [@dblock](https://github.com/dblock).
 * [#12](https://github.com/dblock/fue/issues/12): Added explicit ruby call to run fue - [@SYNstack](https://github.com/SYNstack).
 * [#13](https://github.com/dblock/fue/issues/13): Changed shell tests to be OS-neutral - [@SYNstack](https://github.com/SYNstack).
 * [#16](https://github.com/dblock/fue/issues/16): Setup Windows CI - [@SYNstack](https://github.com/synstack).
 * [#17](https://github.com/dblock/fue/issues/19): Fix open-ended dependencies in gemspec - [@SYNstack](https://github.com/synstack).
+* Your contribution here.
 
 ### 0.2.1 (2018/8/23)
 
