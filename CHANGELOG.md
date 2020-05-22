@@ -1,3 +1,7 @@
+### 0.3.1 (Next)
+
+* Your contribution here.
+
 ### 0.3.0 (2020/05/22)
 
 * [#25](https://github.com/dblock/fue/pull/25): Added `contributors`, find repo contributors' e-mails - [@dblock](https://github.com/dblock).
