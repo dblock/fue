@@ -30,7 +30,7 @@ Chris Wanstrath <chris@ozmm.org>
 Chris Wanstrath <chris@github.com>
 ```
 
-#### Find a Repo Contributors' Email
+#### Find All Repo Contributors' Emails
 
 The `contributors` command looks through a git log of contributors, then fetches their e-mails.
 
@@ -84,6 +84,6 @@ There are [a few feature requests and known issues](https://github.com/dblock/fu
 
 ## Copyright and License
 
-Copyright (c) 2018, Daniel Doubrovkine, [Artsy](http://artsy.github.io), with help from [Orta](https://github.com/orta).
+Copyright (c) 2018-2020, Daniel Doubrovkine, [Artsy](http://artsy.github.io), with help from [Orta](https://github.com/orta).
 
 This project is licensed under the [MIT License](LICENSE.md).
