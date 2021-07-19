@@ -1,4 +1,8 @@
-### 0.3.1 (Next)
+### 0.3.2 (Next)
+
+* Your contribution here.
+
+### 0.3.1 (2021/07/19)
 
 * [#29](https://github.com/dblock/fue/issues/29): Fix: `error: can't modify frozen String` - [@dblock](https://github.com/dblock).
 
