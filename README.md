@@ -78,6 +78,20 @@ The access token will be generated with `public_repo` scope and stored in the ke
 
 See [Creating a Personal Access Token for the Command Line](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line) for more information about personal tokens.
 
+## Debugging
+
+If you run into an unexpected error, try getting a stack trace with `GLI_DEBUG=true`.
+
+```
+$ GLI_DEBUG=true fue find dblock
+
+FrozenError: can't modify frozen String
+  /Users/dblock/source/dblock/fue/lib/fue/auth.rb:97:in `get_secure'
+  /Users/dblock/source/dblock/fue/lib/fue/auth.rb:80:in `get_password'
+  /Users/dblock/source/dblock/fue/lib/fue/auth.rb:50:in `password'
+  /Users/dblock/source/dblock/fue/lib/fue/auth.rb:59:in `block in github'
+```
+
 ## Contributing
 
 There are [a few feature requests and known issues](https://github.com/dblock/fue/issues). Please contribute! See [CONTRIBUTING](CONTRIBUTING.md).

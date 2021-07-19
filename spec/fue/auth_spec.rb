@@ -6,7 +6,7 @@ describe Fue::Auth do
   context 'username' do
     context 'without a username configured' do
       before do
-        expect(Fue::Shell).to receive(:system!).with('git config github.user').and_return(nil)
+        expect(Fue::Shell).to receive(:system!).with('git config user.name').and_return(nil)
       end
       it 'prompts for a username and otherwise returns nil' do
         expect(subject).to receive(:get_username).and_return(nil)
@@ -23,19 +23,19 @@ describe Fue::Auth do
     end
     context 'with a username configured' do
       it 'returns username' do
-        expect(Fue::Shell).to receive(:system!).with('git config github.user').and_return('user')
+        expect(Fue::Shell).to receive(:system!).with('git config user.name').and_return('user')
         expect(subject).to_not receive(:get_username)
         expect(subject.username).to eq 'user'
       end
       it 'chomps username' do
-        expect(Fue::Shell).to receive(:system!).with('git config github.user').and_return("user\n")
+        expect(Fue::Shell).to receive(:system!).with('git config user.name').and_return("user\n")
         expect(subject).to_not receive(:get_username)
         expect(subject.username).to eq 'user'
       end
     end
     context 'with git not configured' do
       before do
-        expect(Fue::Shell).to receive(:system!).with('git config github.user').and_raise(RuntimeError)
+        expect(Fue::Shell).to receive(:system!).with('git config user.name').and_raise(RuntimeError)
       end
       it 'prompts for the username and returns it' do
         expect(subject).to receive(:get_username).and_return('username')

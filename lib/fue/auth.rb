@@ -28,7 +28,7 @@ module Fue
     private
 
     def get_git_username
-      Fue::Shell.system!('git config github.user')
+      Fue::Shell.system!('git config user.name')
     rescue RuntimeError
       nil
     end
@@ -88,7 +88,7 @@ module Fue
     def get_secure
       current_tty = `stty -g`
       system 'stty raw -echo -icanon isig' if $CHILD_STATUS.success?
-      input = ''
+      input = String.new
       while (char = $stdin.getbyte) && !((char == 13) || (char == 10))
         if (char == 127) || (char == 8)
           input[-1, 1] = '' unless input.empty?
