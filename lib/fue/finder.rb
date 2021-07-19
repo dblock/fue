@@ -58,7 +58,7 @@ module Fue
         depth: options[:depth] || 1
       }
 
-      STDOUT.write "Searching for emails for #{options[:username]} ." if options[:verbose]
+      $stdout.write "Searching for emails for #{options[:username]} ." if options[:verbose]
 
       emails = Set.new
 
@@ -67,8 +67,8 @@ module Fue
         response = graphql_client.query(query, query_options)
         repositories = response&.data&.user&.repositories
         repositories&.nodes&.each do |history|
-          master_history = history.default_branch_ref&.target&.history
-          master_history&.nodes&.each do |node|
+          default_history = history.default_branch_ref&.target&.history
+          default_history&.nodes&.each do |node|
             emails << "#{node.author.name} <#{node.author.email}>"
           end
         end
@@ -78,7 +78,7 @@ module Fue
         max_breadth -= 100
         break if max_breadth <= 0
 
-        STDOUT.write '.' if options[:verbose]
+        $stdout.write '.' if options[:verbose]
       end
 
       puts " found #{emails.size} email address#{emails.size == 1 ? '' : 'es'}." if options[:verbose]
@@ -121,7 +121,7 @@ module Fue
 
       logins = Set.new
 
-      STDOUT.write 'Fetching contributors .' if options[:verbose]
+      $stdout.write 'Fetching contributors .' if options[:verbose]
 
       loop do
         response = graphql_client.query(query, query_options)
@@ -131,19 +131,17 @@ module Fue
           logins << login if login
         end
         query_options[:cursor] = history&.page_info.end_cursor
-        STDOUT.write '.' if options[:verbose]
+        $stdout.write '.' if options[:verbose]
         break unless query_options[:cursor]
       end
 
       puts " found #{logins.size} contributor#{logins.size == 1 ? '' : 's'}." if options[:verbose]
 
-      Hash[logins.map do |login|
-        begin
-          [login, emails(options.merge(username: login))]
-        rescue StandardError => e
-          warn e.to_s
-        end
-      end.compact]
+      logins.map do |login|
+        [login, emails(options.merge(username: login))]
+      rescue StandardError => e
+        warn e.to_s
+      end.compact.to_h
     end
 
     private
