@@ -1,3 +1,7 @@
+### 0.4.1 (Next)
+
+* Your contribution here.
+
 ### 0.4.0 (2022/12/31)
 
 * [#31](https://github.com/dblock/fue/pull/31): Use Danger - [@dblock](https://github.com/dblock).
