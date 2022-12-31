@@ -1,9 +1,8 @@
-### 0.4.0 (Next)
+### 0.4.0 (2022/12/31)
 
 * [#31](https://github.com/dblock/fue/pull/31): Use Danger - [@dblock](https://github.com/dblock).
 * [#31](https://github.com/dblock/fue/pull/31): Replace Travis CI with GHA - [@dblock](https://github.com/dblock).
 * [#31](https://github.com/dblock/fue/pull/31): Remove deprecated GitHub PAT creation workflow - [@dblock](https://github.com/dblock).
-* Your contribution here.
 
 ### 0.3.1 (2021/07/19)
 
