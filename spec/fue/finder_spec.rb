@@ -7,7 +7,7 @@ describe Fue::Finder do
   let(:finder) { Fue::Finder.new(token) }
   let(:graphql_client) { finder.send(:graphql_client) }
 
-  context '#find' do
+  describe '#find' do
     it 'finds all e-mails', vcr: { cassette_name: 'github/find/defunkt' } do
       expect(finder.emails(username: 'defunkt', breadth: 50)).to eq(
         [
@@ -18,7 +18,7 @@ describe Fue::Finder do
     end
 
     it 'adjusts depth and breadth' do
-      expect(finder).to receive(:author_id).and_return('id')
+      expect(finder).to receive(:author_id).and_return('MDQ6VXNlcjI=')
       expect(finder.send(:graphql_client)).to receive(:query).with(
         kind_of(String),
         hash_including(depth: 1, breadth: 2)
@@ -27,7 +27,7 @@ describe Fue::Finder do
     end
 
     it 'paginates over more than 100 items', vcr: { cassette_name: 'github/find/defunkt_breadth_142' } do
-      expect(finder).to receive(:author_id).and_return('id')
+      expect(finder).to receive(:author_id).and_return('MDQ6VXNlcjI=')
       expect(finder.send(:graphql_client)).to receive(:query).with(
         kind_of(String),
         hash_including(depth: 1, breadth: 100)
@@ -40,7 +40,7 @@ describe Fue::Finder do
     end
   end
 
-  context '#contributors' do
+  describe '#contributors' do
     it 'finds all e-mails', vcr: { cassette_name: 'github/contributors/colored' } do
       expect(finder.contributors(repo: 'defunkt/colored')).to eq(
         'defunkt' => ['Chris Wanstrath <chris@ozmm.org>'],

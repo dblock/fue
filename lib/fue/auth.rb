@@ -27,44 +27,15 @@ module Fue
 
     private
 
+    def github_token(_code = nil)
+      puts 'Create a personal access token on https://github.com/settings/tokens: '
+      get_secure
+    end
+
     def get_git_username
       Fue::Shell.system!('git config user.name')
     rescue RuntimeError
       nil
-    end
-
-    def github_token(code = nil)
-      github(code).auth.create(scopes: ['public_repo'], note: note).token
-    rescue Github::Error::Unauthorized => e
-      case e.response_headers['X-GitHub-OTP']
-      when /required/
-        github_token(get_code)
-      else
-        raise e
-      end
-    rescue Github::Error::UnprocessableEntity => e
-      raise e, 'A fue token already exists! Please revoke all previously-generated fue personal access tokens at https://github.com/settings/tokens.'
-    end
-
-    def password
-      @password ||= get_password
-    end
-
-    def note
-      "Fui (https://github.com/dblock/fue) on #{Socket.gethostname}"
-    end
-
-    def github(code = nil)
-      Github.new do |config|
-        config.basic_auth = [username, password].join(':')
-        if code
-          config.connection_options = {
-            headers: {
-              'X-GitHub-OTP' => code
-            }
-          }
-        end
-      end
     end
 
     def get_username
@@ -73,16 +44,6 @@ module Fue
       username&.chomp
     rescue Interrupt => e
       raise e, 'ctrl + c'
-    end
-
-    def get_password
-      print "Enter #{username}'s GitHub password (never stored): "
-      get_secure
-    end
-
-    def get_code
-      print 'Enter GitHub 2FA code: '
-      get_secure
     end
 
     def get_secure

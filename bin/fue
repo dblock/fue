@@ -11,7 +11,7 @@ class App
   version Fue::VERSION
 
   switch %i[v verbose], desc: 'Produce verbose output.', default_value: false
-  flag %i[t token], desc: 'GitHub access token.', default_value: ENV['GITHUB_ACCESS_TOKEN']
+  flag %i[t token], desc: 'GitHub access token.', default_value: ENV.fetch('GITHUB_ACCESS_TOKEN', nil)
   flag %i[u username], desc: 'GitHub username.', default_value: Fue::Auth.instance.username
 
   arguments :strict

@@ -1,5 +1,5 @@
 AllCops:
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 2.7
   NewCops: enable
   Exclude:
     - vendor/**/*
@@ -14,3 +14,7 @@ Layout/EndOfLine:
   EnforcedStyle: lf
 
 inherit_from: .rubocop_todo.yml
+
+require:
+  - rubocop-rspec
+  - rubocop-rake

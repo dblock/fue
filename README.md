@@ -2,14 +2,27 @@ Fue
 ===
 
 [![Gem Version](https://badge.fury.io/rb/fue.svg)](https://badge.fury.io/rb/fue)
-[![Build Status](https://travis-ci.org/dblock/fue.svg)](https://travis-ci.org/dblock/fue)
-[![Build status](https://ci.appveyor.com/api/projects/status/github/dblock/fue?branch=master&svg=true)](https://ci.appveyor.com/project/dblock/fue)
+[![Tests](https://github.com/dblock/fue/actions/workflows/test.yml/badge.svg)](https://github.com/dblock/fue/actions/workflows/test.yml)
 
 Find e-mail addresses of a Github users from their commit logs.
 
 Fue is short for "Finding Unicorn Engineers".
 
 ![](images/fue.gif)
+
+## Table of Contents
+
+- [Usage](#usage)
+  - [Commands](#commands)
+    - [Find Someone’s Email](#find-someones-email)
+    - [Find All Repo Contributors’ Emails](#find-all-repo-contributors-emails)
+  - [Options](#options)
+    - [Specify More Depth](#specify-more-depth)
+  - [Get Help](#get-help)
+  - [Access Tokens](#access-tokens)
+- [Debugging](#debugging)
+- [Contributing](#contributing)
+- [Copyright and License](#copyright-and-license)
 
 ## Usage
 
@@ -65,16 +78,7 @@ Displays additional options.
 
 ### Access Tokens
 
-Fue will prompt you for Github credentials and 2FA, if enabled.
-
-```
-$ fue find defunkt
-Enter dblock's GitHub password (never stored): ******************
-Enter GitHub 2FA code: ******
-Token saved to keychain.
-```
-
-The access token will be generated with `public_repo` scope and stored in the keychain. It can be later deleted from [here](https://github.com/settings/tokens). You can also skip the prompts and use a previously obtained token with `-t` or by setting the `GITHUB_ACCESS_TOKEN` environment variable.
+Fue will ask you to create a personal access token and will store it in the keychain. The access token should be created with `public_repo` scope [here](https://github.com/settings/tokens). You can also skip the prompts and use a previously obtained token with `-t` or by setting the `GITHUB_ACCESS_TOKEN` environment variable.
 
 See [Creating a Personal Access Token for the Command Line](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line) for more information about personal tokens.
 
@@ -98,6 +102,6 @@ There are [a few feature requests and known issues](https://github.com/dblock/fu
 
 ## Copyright and License
 
-Copyright (c) 2018-2020, Daniel Doubrovkine, [Artsy](http://artsy.github.io), with help from [Orta](https://github.com/orta).
+Copyright (c) 2018-2022, Daniel Doubrovkine, [Artsy](http://artsy.github.io), with help from [Orta](https://github.com/orta).
 
 This project is licensed under the [MIT License](LICENSE.md).
