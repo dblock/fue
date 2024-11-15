@@ -18,12 +18,12 @@ module Fue
       def security(command = nil, options = nil)
         run = [security_path]
         run << "#{command}-internet-password"
-        run << "-a #{options[:username]}"
-        run << "-s #{options[:server]}"
+        run << "-a #{Shellwords.escape(options[:username])}"
+        run << "-s #{Shellwords.escape(options[:server])}"
         if command == 'add'
-          run << "-l #{options[:label]}"
+          run << "-l #{Shellwords.escape(options[:label])}"
           run << '-U'
-          run << "-w #{options[:password]}" if options.key?(:password)
+          run << "-w #{Shellwords.escape(options[:password])}" if options.key?(:password)
         else
           run << '-w'
         end
@@ -32,7 +32,8 @@ module Fue
 
       def security_path
         @security_path ||= begin
-          `which security`.chomp
+          path = `which security`.chomp
+          path.empty? ? 'security' : path
         rescue StandardError
           'security'
         end
