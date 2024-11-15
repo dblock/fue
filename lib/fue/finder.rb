@@ -140,7 +140,7 @@ module Fue
       logins.map do |login|
         [login, emails(options.merge(username: login))]
       rescue StandardError => e
-        warn e.to_s
+        warn e
       end.compact.to_h
     end
 

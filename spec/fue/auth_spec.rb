@@ -43,11 +43,12 @@ describe Fue::Auth do
   context 'with a previously stored token' do
     before do
       expect(Fue::Shell).to receive(:system!).with('git config user.name').and_return('user')
-      expect(Fue::Security).to receive(:get).with({
-                                                    username: 'user',
-                                                    label: 'fue',
-                                                    server: 'github.com'
-                                                  }).and_return('stored')
+      expect(Fue::Security).to receive(:get).with(
+        {
+          username: 'user',
+          label: 'fue',
+          server: 'github.com'
+        }).and_return('stored')
     end
 
     it 'returns token' do
@@ -62,12 +63,14 @@ describe Fue::Auth do
 
     it 'returns token' do
       expect(Fue::Auth.instance).to receive(:get_secure).and_return('secure')
-      expect(Fue::Security).to receive(:store!).with({
-                                                       username: 'user',
-                                                       label: 'fue',
-                                                       password: 'secure',
-                                                       server: 'github.com'
-                                                     })
+      expect(Fue::Security).to receive(:store!).with(
+        {
+          username: 'user',
+          label: 'fue',
+          password: 'secure',
+          server: 'github.com'
+        }
+      )
       expect(Fue::Auth.instance.token).to eq 'secure'
     end
   end

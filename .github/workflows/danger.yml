@@ -11,7 +11,7 @@ jobs:
           fetch-depth: 0
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7
+          ruby-version: 3.3.6
           bundler-cache: true
       - run: |
           # the personal token is public, this is ok, base64 encode to avoid tripping Github

@@ -1,5 +1,6 @@
-### 0.4.1 (Next)
+### 0.5.0 (Next)
 
+* [#32](https://github.com/dblock/fue/pull/32): Upgraded to ruby 3.3 - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### 0.4.0 (2022/12/31)
