@@ -1,3 +1,7 @@
+### 0.5.1 (Next)
+
+* Your contribution here.
+
 ### 0.5.0 (2024-11-15)
 
 * [#33](https://github.com/dblock/fue/pull/33): Fix: shell escape command lines - [@dblock](https://github.com/dblock).
