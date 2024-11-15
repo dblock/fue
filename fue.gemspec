@@ -22,5 +22,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'github_api', '~> 0.19.0'
   s.add_dependency 'gli', '~> 2.17'
   s.add_dependency 'graphlient', '~> 0.6.0'
+  s.add_dependency 'command_line'
   s.metadata['rubygems_mfa_required'] = 'true'
 end

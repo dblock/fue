@@ -28,7 +28,7 @@ module Fue
     private
 
     def github_token(_code = nil)
-      puts 'Create a personal access token on https://github.com/settings/tokens: '
+      puts 'Create a personal access token on https://github.com/settings/tokens and paste it here: '
       get_secure
     end
 
