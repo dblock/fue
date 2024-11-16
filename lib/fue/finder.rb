@@ -33,7 +33,8 @@ module Fue
                           author {
                             email
                             name
-                          }
+                          },
+                          messageBody
                         }
                       }
                     }
@@ -69,9 +70,16 @@ module Fue
         repositories&.nodes&.each do |history|
           default_history = history.default_branch_ref&.target&.history
           default_history&.nodes&.each do |node|
-            next if node.author.email.end_with?('@users.noreply.github.com') && !!options[:exclude_noreply]
+            unless noreply?(node.author.email) && options[:exclude_noreply]
+              emails << "#{node.author.name} <#{node.author.email}>"
+            end
 
-            emails << "#{node.author.name} <#{node.author.email}>"
+            unless options[:exclude_signed_off_by]
+              node.message_body.match(/^Signed-off-by: (?<email>[^\r\n]*)$/) do |m|
+                email = m[:email]
+                emails << email unless noreply?(email) && options[:exclude_noreply]
+              end
+            end
           end
         end
         query_options[:cursor] = repositories&.page_info&.start_cursor
@@ -147,6 +155,10 @@ module Fue
     end
 
     private
+
+    def noreply?(email)
+      email.include?('@users.noreply.github.com')
+    end
 
     def graphql_client
       @graphql_client ||= Graphlient::Client.new(
