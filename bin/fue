@@ -30,14 +30,16 @@ class App
   command :find do |c|
     c.flag %i[d depth], desc: 'Maximum search depth in each repository.', default_value: 1
     c.flag %i[b breadth], desc: 'Maximum number of repositories to search.', default_value: 10
+    c.switch %i[noreply], desc: 'Include @users.noreply.github.com e-mail addresses.', default_value: true
     c.action do |global_options, options, args|
       username = args.first
       options[:depth] = options[:depth].to_i
       options[:breadth] = options[:breadth].to_i
+      options[:exclude_noreply] = !options[:noreply]
       if global_options[:verbose]
         puts "Searching for e-mail address for '#{username}' " \
              "in the first #{options[:depth].to_i > 1 ? "#{options[:depth]} commits" : 'commit'} " \
-             "of #{options[:breadth]} most recent repositor#{options[:breadth] == 1 ? 'y' : 'ies'} ..."
+             "of #{options[:breadth]} most recent contributed to repositor#{options[:breadth] == 1 ? 'y' : 'ies'} ..."
       end
       puts $fue.emails(options.merge(username: username, verbose: global_options[:verbose]))
       exit_now! nil, 0
@@ -49,14 +51,16 @@ class App
   command :contributors do |c|
     c.flag %i[d depth], desc: 'Maximum search depth in each repository for a given user.', default_value: 1
     c.flag %i[b breadth], desc: 'Maximum number of repositories to search.', default_value: 10
+    c.switch %i[noreply], desc: 'Include @users.noreply.github.com e-mail addresses.', default_value: true
     c.action do |global_options, options, args|
       repo = args.first
       options[:depth] = options[:depth].to_i
       options[:breadth] = options[:breadth].to_i
+      options[:exclude_noreply] = !options[:noreply]
       if global_options[:verbose]
         puts "Searching for contributors' e-mail addresses in '#{repo}' " \
-             "in the first #{options[:depth].to_i > 1 ? "#{options[:depth]} commits" : 'commit'} " \
-             "of #{options[:breadth]} most recent repositor#{options[:breadth] == 1 ? 'y' : 'ies'} ..."
+             "in their first #{options[:depth].to_i > 1 ? "#{options[:depth]} commits" : 'commit'} " \
+             "of #{options[:breadth]} most recent contributed to repositor#{options[:breadth] == 1 ? 'y' : 'ies'} ..."
       end
       contributor_emails = $fue.contributors(options.merge(repo: repo, verbose: global_options[:verbose]))
       contributor_emails.each_pair do |username, emails|

@@ -8,10 +8,20 @@ describe Fue::Finder do
   let(:graphql_client) { finder.send(:graphql_client) }
 
   describe '#find' do
-    it 'finds all e-mails', vcr: { cassette_name: 'github/find/defunkt' } do
-      expect(finder.emails(username: 'defunkt', breadth: 50)).to eq(
+    it 'excludes @noreply e-mails', vcr: { cassette_name: 'github/find/defunkt' } do
+      expect(finder.emails(username: 'defunkt', breadth: 50, exclude_noreply: true)).to eq(
         [
           'Chris Wanstrath <chris@ozmm.org>',
+          'defunkt <chris@ozmm.org>'
+        ]
+      )
+    end
+
+    it 'finds all e-mails', vcr: { cassette_name: 'github/find/defunkt' } do
+      expect(finder.emails(username: 'defunkt', breadth: 50, exclude_noreply: false)).to eq(
+        [
+          'Chris Wanstrath <chris@ozmm.org>',
+          'Chris Wanstrath <defunkt@users.noreply.github.com>',
           'defunkt <chris@ozmm.org>'
         ]
       )
@@ -41,8 +51,15 @@ describe Fue::Finder do
   end
 
   describe '#contributors' do
-    it 'finds all e-mails', vcr: { cassette_name: 'github/contributors/colored' } do
-      expect(finder.contributors(repo: 'defunkt/colored')).to eq(
+    it 'finds e-mails', vcr: { cassette_name: 'github/contributors/colored' } do
+      expect(finder.contributors(repo: 'defunkt/colored', exclude_noreply: true)).to eq(
+        'defunkt' => ['Chris Wanstrath <chris@ozmm.org>'],
+        'kch' => []
+      )
+    end
+
+    it 'finds e-mails', vcr: { cassette_name: 'github/contributors/colored' } do
+      expect(finder.contributors(repo: 'defunkt/colored', exclude_noreply: false)).to eq(
         'defunkt' => ['Chris Wanstrath <chris@ozmm.org>'],
         'kch' => ['Caio Chassot <dev@users.noreply.github.com>']
       )
