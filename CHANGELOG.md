@@ -1,5 +1,6 @@
 ### 0.6.0 (Next)
 
+* [#37](https://github.com/dblock/fue/pull/36): Added fetching of e-mails from `Signed-off-by` and `--[no-]signed-off-by` - [@dblock](https://github.com/dblock).
 * [#36](https://github.com/dblock/fue/pull/36): Added `--[no-]reply` to exclude `@users.noreply.github.com` email addresses - [@dblock](https://github.com/dblock).
 * Your contribution here.
 

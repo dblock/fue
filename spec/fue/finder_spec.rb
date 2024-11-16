@@ -18,10 +18,10 @@ describe Fue::Finder do
     end
 
     it 'finds all e-mails', vcr: { cassette_name: 'github/find/defunkt' } do
-      expect(finder.emails(username: 'defunkt', breadth: 50, exclude_noreply: false)).to eq(
+      expect(finder.emails(username: 'defunkt', breadth: 50)).to eq(
         [
+          'Chris Wanstrath <2+defunkt@users.noreply.github.com>',
           'Chris Wanstrath <chris@ozmm.org>',
-          'Chris Wanstrath <defunkt@users.noreply.github.com>',
           'defunkt <chris@ozmm.org>'
         ]
       )
@@ -51,17 +51,82 @@ describe Fue::Finder do
   end
 
   describe '#contributors' do
-    it 'finds e-mails', vcr: { cassette_name: 'github/contributors/colored' } do
-      expect(finder.contributors(repo: 'defunkt/colored', exclude_noreply: true)).to eq(
-        'defunkt' => ['Chris Wanstrath <chris@ozmm.org>'],
-        'kch' => []
+    it 'excludes no-reply emails', vcr: { cassette_name: 'github/contributors/opensearch-project/opensearch-sdk-py' } do
+      expect(
+        finder.contributors(repo: 'opensearch-project/opensearch-sdk-py', exclude_noreply: true)
+      ).to eq(
+        'ignacia-kihn' => [
+          'Catina <catina.barton@senger.test>'
+        ],
+        'dblock' => [
+          'DB <dblock@dblock.org>',
+          'DB <dblock@example.com>',
+          'dblock <dblock@example.com>'
+        ],
+        'isaac_gerlach' => [
+          'Isaac Gerlach <otelia@rolfson.test>',
+          'Isaac Gerlach Signed <otelia-signed-by@rolfson.test>'
+        ],
+        'carroll' => ['Hobert Ondricka <yolande_simonis@mckenzie.example>']
       )
     end
 
-    it 'finds e-mails', vcr: { cassette_name: 'github/contributors/colored' } do
-      expect(finder.contributors(repo: 'defunkt/colored', exclude_noreply: false)).to eq(
-        'defunkt' => ['Chris Wanstrath <chris@ozmm.org>'],
-        'kch' => ['Caio Chassot <dev@users.noreply.github.com>']
+    it 'excludes signed off by', vcr: { cassette_name: 'github/contributors/opensearch-project/opensearch-sdk-py' } do
+      expect(
+        finder.contributors(repo: 'opensearch-project/opensearch-sdk-py', exclude_signed_off_by: true)
+      ).to eq(
+        'ignacia-kihn' => [
+          'Ignacia Kihn <83948568+ignacia-kihn@users.noreply.github.com>',
+          'Catina <catina.barton@senger.test>'
+        ],
+        'dblock' => [
+          'DB <dblock@dblock.org>',
+          'DB <dblock@example.com>',
+          'dblock <dblock@example.com>'
+        ],
+        'isaac_gerlach' => ['Isaac Gerlach <otelia@rolfson.test>'],
+        'carroll' => ['Hobert Ondricka <yolande_simonis@mckenzie.example>']
+      )
+    end
+
+    it 'excludes both no-reply and signed off by',
+       vcr: { cassette_name: 'github/contributors/opensearch-project/opensearch-sdk-py' } do
+      expect(
+        finder.contributors(
+          repo: 'opensearch-project/opensearch-sdk-py',
+          exclude_noreply: true,
+          exclude_signed_off_by: true
+        )
+      ).to eq(
+        'ignacia-kihn' => [
+          'Catina <catina.barton@senger.test>'
+        ],
+        'dblock' => [
+          'DB <dblock@dblock.org>',
+          'DB <dblock@example.com>',
+          'dblock <dblock@example.com>'
+        ],
+        'isaac_gerlach' => ['Isaac Gerlach <otelia@rolfson.test>'],
+        'carroll' => ['Hobert Ondricka <yolande_simonis@mckenzie.example>']
+      )
+    end
+
+    it 'finds e-mails', vcr: { cassette_name: 'github/contributors/opensearch-project/opensearch-sdk-py' } do
+      expect(finder.contributors(repo: 'opensearch-project/opensearch-sdk-py')).to eq(
+        'ignacia-kihn' => [
+          'Ignacia Kihn <83948568+ignacia-kihn@users.noreply.github.com>',
+          'Catina <catina.barton@senger.test>'
+        ],
+        'dblock' => [
+          'DB <dblock@dblock.org>',
+          'DB <dblock@example.com>',
+          'dblock <dblock@example.com>'
+        ],
+        'isaac_gerlach' => [
+          'Isaac Gerlach <otelia@rolfson.test>',
+          'Isaac Gerlach Signed <otelia-signed-by@rolfson.test>'
+        ],
+        'carroll' => ['Hobert Ondricka <yolande_simonis@mckenzie.example>']
       )
     end
   end

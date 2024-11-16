@@ -18,6 +18,7 @@ Fue is short for "Finding Unicorn Engineers".
     - [Find All Repo Contributors’ Emails](#find-all-repo-contributors-emails)
   - [Options](#options)
     - [Exclude No-Reply Emails](#exclude-no-reply-emails)
+    - [Exclude Emails from Signed-off-by](#exclude-emails-from-signed-off-by)
     - [Specify More Depth](#specify-more-depth)
   - [Get Help](#get-help)
   - [Access Tokens](#access-tokens)
@@ -65,10 +66,19 @@ fue find --no-noreply kch
 ```
 
 ```
-$ fue --verbose contributors --no-noreply defunkt/colored
+fue --verbose contributors --no-noreply defunkt/colored
+```
 
-defunkt: Chris Wanstrath <chris@ozmm.org>
-kch:
+#### Exclude Emails from Signed-off-by
+
+By default `fue find` and `fue contributors` will include emails gathered from `Signed-off-by` text in commit descriptions. Exclude those with `--no-signed-off-by`.
+
+```
+fue find --no-signed-off-by defunkt
+```
+
+```
+fue --verbose contributors --no-signed-off-by defunkt/colored
 ```
 
 #### Specify More Depth
