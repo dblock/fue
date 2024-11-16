@@ -1,5 +1,6 @@
-### 0.5.1 (Next)
+### 0.6.0 (Next)
 
+* [#36](https://github.com/dblock/fue/pull/36): Added `--[no-]reply` to exclude `@users.noreply.github.com` email addresses - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### 0.5.0 (2024-11-15)

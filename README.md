@@ -17,13 +17,13 @@ Fue is short for "Finding Unicorn Engineers".
     - [Find Someone’s Email](#find-someones-email)
     - [Find All Repo Contributors’ Emails](#find-all-repo-contributors-emails)
   - [Options](#options)
+    - [Exclude No-Reply Emails](#exclude-no-reply-emails)
     - [Specify More Depth](#specify-more-depth)
   - [Get Help](#get-help)
   - [Access Tokens](#access-tokens)
 - [Debugging](#debugging)
 - [Contributing](#contributing)
 - [Copyright and License](#copyright-and-license)
-
 ## Usage
 
 ```
@@ -55,6 +55,21 @@ kch: Caio Chassot <kch@users.noreply.github.com>
 ```
 
 ### Options
+
+#### Exclude No-Reply Emails
+
+By default `fue find` and `fue contributors` will include no-reply emails such as `kch@users.noreply.github.com`. Exclude those with `--no-noreply`.
+
+```
+fue find --no-noreply kch
+```
+
+```
+$ fue --verbose contributors --no-noreply defunkt/colored
+
+defunkt: Chris Wanstrath <chris@ozmm.org>
+kch:
+```
 
 #### Specify More Depth
 

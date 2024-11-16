@@ -69,6 +69,8 @@ module Fue
         repositories&.nodes&.each do |history|
           default_history = history.default_branch_ref&.target&.history
           default_history&.nodes&.each do |node|
+            next if node.author.email.end_with?('@users.noreply.github.com') && !!options[:exclude_noreply]
+
             emails << "#{node.author.name} <#{node.author.email}>"
           end
         end
