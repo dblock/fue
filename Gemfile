@@ -5,6 +5,10 @@ source 'http://rubygems.org'
 gemspec
 
 group :development, :test do
+  gem 'danger', require: false
+  gem 'danger-changelog', require: false
+  gem 'danger-pr-comment', require: false
+  gem 'danger-toc', require: false
   gem 'rake'
   gem 'recursive-open-struct'
   gem 'rspec'
