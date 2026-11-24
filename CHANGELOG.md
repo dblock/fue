@@ -1,5 +1,6 @@
 ### 0.6.1 (Next)
 
+* [#59](https://github.com/dblock/fue/pull/59): Only include `Signed-off-by` addresses of the commit author, and all of them, not just the first - [@dblock](https://github.com/dblock).
 * [#58](https://github.com/dblock/fue/pull/58): Fixed `--breadth` above 100 repeating the first 100 repositories, and GitHub timeouts with large `--depth` by keeping each request small and retrying with fewer repositories, treat `noreply@github.com` as a no-reply address, and `fue find` now defaults to `--breadth=100 --depth=10` - [@dblock](https://github.com/dblock).
 * Your contribution here.
 

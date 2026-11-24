@@ -257,13 +257,22 @@ module Fue
 
         next if options[:exclude_signed_off_by]
 
-        node.message_body.match(/^Signed-off-by: (?<email>[^\r\n]*)$/) do |m|
-          email = m[:email]
+        node.message_body.scan(/^Signed-off-by: ([^\r\n]*)$/).flatten.each do |email|
           next if noreply?(email) && options[:exclude_noreply]
+          next unless signed_off_by_author?(email, node.author, options[:username])
 
           emails << (options[:exclude_names] ? email[/<([^>]+)>/, 1] || email : email)
         end
       end
+    end
+
+    # A Signed-off-by line belongs to the commit author when its name or e-mail address matches
+    # the author's name, the author's e-mail address, or the user's GitHub login, ignoring case.
+    def signed_off_by_author?(signed_off_by, author, login)
+      name = signed_off_by[/\A([^<]*)</, 1]&.strip
+      email = signed_off_by[/<([^>]+)>/, 1]
+      candidates = [author.name, author.email, login].compact.map(&:downcase)
+      ([name, email].compact.map(&:downcase) & candidates).any?
     end
 
     def format_email(name, email, options)

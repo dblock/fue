@@ -133,6 +133,42 @@ describe Fue::Finder do
       end
     end
 
+    context 'with Signed-off-by' do
+      let(:author) { RecursiveOpenStruct.new(name: 'Daniel Doubrovkine', email: 'dblock@dblock.org') }
+
+      def history(message_body)
+        RecursiveOpenStruct.new(
+          { nodes: [{ author: author.to_h, message_body: message_body }] },
+          recurse_over_arrays: true
+        )
+      end
+
+      def signed_off_emails(message_body)
+        emails = Set.new
+        finder.send(:add_history_emails, emails, history(message_body), username: 'dblock')
+        emails.to_a - ['Daniel Doubrovkine <dblock@dblock.org>']
+      end
+
+      it 'keeps sign-offs matching the author name, author e-mail, or login, ignoring case' do
+        expect(signed_off_emails(<<~MESSAGE)).to eq(
+          Signed-off-by: daniel doubrovkine <dblock@amazon.com>
+          Signed-off-by: Someone <DBLOCK@DBLOCK.ORG>
+          Signed-off-by: dblock <dblock@microsoft.com>
+        MESSAGE
+          ['daniel doubrovkine <dblock@amazon.com>', 'Someone <DBLOCK@DBLOCK.ORG>', 'dblock <dblock@microsoft.com>']
+        )
+      end
+
+      it 'skips sign-offs by someone else' do
+        expect(signed_off_emails(<<~MESSAGE)).to eq ['dblock <dblock@amazon.com>']
+          Backport a fix.
+
+          Signed-off-by: Jane Doe <jane@example.com>
+          Signed-off-by: dblock <dblock@amazon.com>
+        MESSAGE
+      end
+    end
+
     it 'treats noreply@github.com as a no-reply e-mail' do
       expect(finder.send(:noreply?, 'GitHub <noreply@github.com>')).to be true
       expect(finder.send(:noreply?, 'dblock <542335+dblock@users.noreply.github.com>')).to be true
@@ -171,8 +207,7 @@ describe Fue::Finder do
           'dblock <dblock@example.com>'
         ],
         'isaac_gerlach' => [
-          'Isaac Gerlach <otelia@rolfson.test>',
-          'Isaac Gerlach Signed <otelia-signed-by@rolfson.test>'
+          'Isaac Gerlach <otelia@rolfson.test>'
         ],
         'carroll' => ['Hobert Ondricka <yolande_simonis@mckenzie.example>']
       )
@@ -229,8 +264,7 @@ describe Fue::Finder do
           'dblock@example.com'
         ],
         'isaac_gerlach' => [
-          'otelia@rolfson.test',
-          'otelia-signed-by@rolfson.test'
+          'otelia@rolfson.test'
         ],
         'carroll' => ['yolande_simonis@mckenzie.example']
       )
@@ -258,8 +292,7 @@ describe Fue::Finder do
           'dblock <dblock@example.com>'
         ],
         'isaac_gerlach' => [
-          'Isaac Gerlach <otelia@rolfson.test>',
-          'Isaac Gerlach Signed <otelia-signed-by@rolfson.test>'
+          'Isaac Gerlach <otelia@rolfson.test>'
         ],
         'carroll' => ['Hobert Ondricka <yolande_simonis@mckenzie.example>']
       )

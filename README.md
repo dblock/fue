@@ -86,7 +86,7 @@ fue --verbose contributors --no-noreply defunkt/colored
 
 #### Exclude Emails from Signed-off-by
 
-By default `fue find` and `fue contributors` will include emails gathered from `Signed-off-by` text in commit descriptions. Exclude those with `--no-signed-off-by`.
+By default `fue find` and `fue contributors` will include emails gathered from `Signed-off-by` text in commit descriptions. Only sign-offs by the commit author count: those whose name or e-mail address matches the author's name or e-mail address, or the user's GitHub login, ignoring case. Exclude all of them with `--no-signed-off-by`.
 
 ```sh
 fue find --no-signed-off-by defunkt
