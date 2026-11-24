@@ -1,4 +1,4 @@
-### 0.6.0 (Next)
+### 0.6.0 (2026/11/24)
 
 * [#54](https://github.com/dblock/fue/pull/54): Added `fue mentions` to list contributors without an e-mail address to @mention - [@dblock](https://github.com/dblock).
 * [#53](https://github.com/dblock/fue/pull/53): `fue contributors` skips contributors without e-mail addresses, e.g. with `--no-noreply` - [@dblock](https://github.com/dblock).
@@ -16,7 +16,6 @@
 * [#38](https://github.com/dblock/fue/pull/38): Migrate Danger to use danger-pr-comment workflow - [@dblock](https://github.com/dblock).
 * [#37](https://github.com/dblock/fue/pull/36): Added fetching of e-mails from `Signed-off-by` and `--[no-]signed-off-by` - [@dblock](https://github.com/dblock).
 * [#36](https://github.com/dblock/fue/pull/36): Added `--[no-]reply` to exclude `@users.noreply.github.com` email addresses - [@dblock](https://github.com/dblock).
-* Your contribution here.
 
 ### 0.5.0 (2024-11-15)
 
