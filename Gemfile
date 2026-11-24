@@ -23,6 +23,14 @@ if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.2')
   end
 end
 
+# ruby-gem-release requires Ruby 3.3 or newer.
+if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.3')
+  group :release do
+    gem 'commonmarker', '~> 2.10', require: false
+    gem 'ruby-gem-release', '~> 0.9.0', require: false
+  end
+end
+
 group :danger do
   gem 'danger', require: false
   gem 'danger-changelog', require: false

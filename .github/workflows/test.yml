@@ -20,7 +20,7 @@ jobs:
           - { ruby: '4.0', os: macos-latest }
     name: Test (Ruby ${{ matrix.entry.ruby }}, ${{ matrix.entry.os }})
     env:
-      BUNDLE_WITHOUT: 'lint:danger'
+      BUNDLE_WITHOUT: 'lint:danger:release'
     steps:
       - uses: actions/checkout@v7
         with:
