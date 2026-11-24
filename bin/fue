@@ -32,12 +32,14 @@ class App
     c.flag %i[b breadth], desc: 'Maximum number of repositories to search.', default_value: 10
     c.switch %i[noreply], desc: 'Include @users.noreply.github.com e-mail addresses.', default_value: true
     c.switch %i[signed-off-by], desc: 'Include e-mail addresses from Signed-off-by.', default_value: true
+    c.switch %i[names], desc: 'Include names with e-mail addresses.', default_value: true
     c.action do |global_options, options, args|
       username = args.first
       options[:depth] = options[:depth].to_i
       options[:breadth] = options[:breadth].to_i
       options[:exclude_noreply] = !options.delete(:noreply)
       options[:exclude_signed_off_by] = !options.delete(:'signed-off-by')
+      options[:exclude_names] = !options.delete(:names)
       if global_options[:verbose]
         puts "Searching for e-mail address for '#{username}' " \
              "in the first #{options[:depth].to_i > 1 ? "#{options[:depth]} commits" : 'commit'} " \
@@ -55,12 +57,14 @@ class App
     c.flag %i[b breadth], desc: 'Maximum number of repositories to search.', default_value: 10
     c.switch %i[noreply], desc: 'Include @users.noreply.github.com e-mail addresses.', default_value: true
     c.switch %i[signed-off-by], desc: 'Include e-mail addresses from Signed-off-by.', default_value: true
+    c.switch %i[names], desc: 'Include names with e-mail addresses.', default_value: true
     c.action do |global_options, options, args|
       repo = args.first
       options[:depth] = options[:depth].to_i
       options[:breadth] = options[:breadth].to_i
       options[:exclude_noreply] = !options.delete(:noreply)
       options[:exclude_signed_off_by] = !options.delete(:'signed-off-by')
+      options[:exclude_names] = !options.delete(:names)
       if global_options[:verbose]
         puts "Searching for contributors' e-mail addresses in '#{repo}' " \
              "in their first #{options[:depth].to_i > 1 ? "#{options[:depth]} commits" : 'commit'} " \

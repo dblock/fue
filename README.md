@@ -18,6 +18,7 @@ Fue is short for "Finding Unicorn Engineers".
   - [Options](#options)
     - [Exclude No-Reply Emails](#exclude-no-reply-emails)
     - [Exclude Emails from Signed-off-by](#exclude-emails-from-signed-off-by)
+    - [Exclude Names](#exclude-names)
     - [Specify More Depth](#specify-more-depth)
   - [Get Help](#get-help)
   - [Access Tokens](#access-tokens)
@@ -79,6 +80,14 @@ fue find --no-signed-off-by defunkt
 
 ```sh
 fue --verbose contributors --no-signed-off-by defunkt/colored
+```
+
+#### Exclude Names
+
+By default `fue find` and `fue contributors` display names with e-mail addresses, such as `Chris Wanstrath <chris@ozmm.org>`. Display only e-mail addresses with `--no-names`.
+
+```sh
+fue find --no-names defunkt
 ```
 
 #### Specify More Depth

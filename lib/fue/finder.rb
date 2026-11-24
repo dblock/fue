@@ -141,14 +141,16 @@ module Fue
           default_history = history.default_branch_ref&.target&.history
           default_history&.nodes&.each do |node|
             unless noreply?(node.author.email) && options[:exclude_noreply]
-              emails << "#{node.author.name} <#{node.author.email}>"
+              emails << format_email(node.author.name, node.author.email, options)
             end
 
             next if options[:exclude_signed_off_by]
 
             node.message_body.match(/^Signed-off-by: (?<email>[^\r\n]*)$/) do |m|
               email = m[:email]
-              emails << email unless noreply?(email) && options[:exclude_noreply]
+              next if noreply?(email) && options[:exclude_noreply]
+
+              emails << (options[:exclude_names] ? email[/<([^>]+)>/, 1] || email : email)
             end
           end
         end
@@ -162,6 +164,10 @@ module Fue
       end
 
       emails
+    end
+
+    def format_email(name, email, options)
+      options[:exclude_names] ? email : "#{name} <#{email}>"
     end
 
     def noreply?(email)
