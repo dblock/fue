@@ -49,6 +49,46 @@ describe Fue::Finder do
       expect(finder.emails(username: 'defunkt', depth: 1, breadth: 2)).to eq([])
     end
 
+    it 'looks through more than 100 commits in a repository' do
+      history = lambda do |email, has_next_page|
+        {
+          nodes: [{ author: { name: 'Name', email: email }, message_body: '' }],
+          page_info: { has_next_page: has_next_page, end_cursor: 'cursor' }
+        }
+      end
+      first_ref = { target: { history: history.call('first@example.com', true) } }
+      next_ref = { target: { history: history.call('next@example.com', false) } }
+      first_page = RecursiveOpenStruct.new(
+        {
+          data: {
+            user: {
+              repositories: {
+                nodes: [{ name_with_owner: 'owner/repo', default_branch_ref: first_ref }],
+                page_info: { start_cursor: nil }
+              }
+            }
+          }
+        },
+        recurse_over_arrays: true
+      )
+      next_page = RecursiveOpenStruct.new(
+        { data: { repository: { default_branch_ref: next_ref } } },
+        recurse_over_arrays: true
+      )
+      expect(finder).to receive(:author_id).and_return('MDQ6VXNlcjI=')
+      expect(graphql_client).to receive(:query).with(
+        kind_of(String),
+        hash_including(depth: 100, breadth: 1, is_fork: false)
+      ).ordered.and_return(first_page)
+      expect(graphql_client).to receive(:query).with(
+        kind_of(String),
+        hash_including(owner: 'owner', name: 'repo', depth: 50, cursor: 'cursor')
+      ).ordered.and_return(next_page)
+      expect(finder.emails(username: 'defunkt', depth: 150, breadth: 1)).to eq(
+        ['Name <first@example.com>', 'Name <next@example.com>']
+      )
+    end
+
     it 'finds e-mails in forks', vcr: { cassette_name: 'github/find/lundefugl' } do
       expect(finder.emails(username: 'lundefugl')).to eq(['lundefugl <montgomery_scott@gmx.de>'])
     end

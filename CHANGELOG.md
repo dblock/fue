@@ -1,5 +1,6 @@
 ### 0.6.0 (Next)
 
+* [#48](https://github.com/dblock/fue/pull/48): `--depth` looks through more than 100 commits in each repository - [@dblock](https://github.com/dblock).
 * [#47](https://github.com/dblock/fue/pull/47): Added `--[no-]names` to display only e-mail addresses - [@dblock](https://github.com/dblock).
 * [#46](https://github.com/dblock/fue/pull/46): `fue find` searches forks when the user has no commits in their own repositories - [@dblock](https://github.com/dblock).
 * [#45](https://github.com/dblock/fue/pull/45): Fixed using a GitHub token stored in the keychain by another tool, such as ghi - [@dblock](https://github.com/dblock).

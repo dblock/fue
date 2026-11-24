@@ -92,7 +92,7 @@ fue find --no-names defunkt
 
 #### Specify More Depth
 
-By default the code looks at 1 commit from the last 10 repositories. You can look at more repositories (breadth) and more commits (depth). The maximum value for depth is 100, enforced by Github. Fue will iterate over a number of repositories larger than 100.
+By default the code looks at 1 commit from the last 10 repositories. You can look at more repositories (breadth) and more commits (depth). GitHub returns at most 100 repositories or commits at a time, so fue pages through larger values of breadth and depth.
 
 ```sh
 $ fue find --breadth=100 --depth=5 defunkt
