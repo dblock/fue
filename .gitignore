@@ -4,3 +4,4 @@ pkg
 xcuserdata
 .env
 .DS_Store
+vendor/bundle
