@@ -9,6 +9,7 @@ module Fue
     end
 
     attr_reader :token_source
+    attr_writer :username
 
     def self.instance
       @instance ||= new
@@ -22,8 +23,7 @@ module Fue
     def username
       @username ||= begin
         username = git_username&.chomp
-        username = prompt_username if username.nil? || username.empty?
-        username
+        username unless username.nil? || username.empty?
       end
     end
 
@@ -48,7 +48,7 @@ module Fue
     end
 
     def keychain_token
-      return unless RUBY_PLATFORM.include?('darwin')
+      return unless RUBY_PLATFORM.include?('darwin') && username
 
       Fue::Security.get(username: username, server: 'github.com', label: 'fue')
     end
@@ -57,14 +57,6 @@ module Fue
       Fue::Shell.system!('git config user.name')
     rescue RuntimeError, SystemCallError
       nil
-    end
-
-    def prompt_username
-      print 'Enter GitHub username: '
-      username = $stdin.gets
-      username&.chomp
-    rescue Interrupt => e
-      raise e, 'ctrl + c'
     end
   end
 end

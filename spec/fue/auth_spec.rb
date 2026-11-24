@@ -4,39 +4,30 @@ require 'spec_helper'
 
 describe Fue::Auth do
   describe '#username' do
-    context 'without a username configured' do
-      before do
-        expect(Fue::Shell).to receive(:system!).with('git config user.name').and_return(nil)
-      end
-
-      it 'prompts for a username and otherwise returns nil' do
-        expect(subject).to receive(:prompt_username).and_return(nil)
-        expect(subject.username).to be_nil
-      end
-
-      it 'prompts for a username and returns it' do
-        expect(subject).to receive(:prompt_username).and_return('username')
-        expect(subject.username).to eq 'username'
-      end
-
-      it 'reads the username from stdin and chomps it' do
-        expect($stdin).to receive(:gets).and_return("username\n")
-        expect(subject.username).to eq 'username'
-      end
+    it 'returns nil without a git username' do
+      expect(Fue::Shell).to receive(:system!).with('git config user.name').and_return(nil)
+      expect(subject.username).to be_nil
     end
 
-    context 'with a username configured' do
-      it 'returns username' do
-        expect(Fue::Shell).to receive(:system!).with('git config user.name').and_return('user')
-        expect(subject).not_to receive(:prompt_username)
-        expect(subject.username).to eq 'user'
-      end
+    it 'returns nil with an empty git username' do
+      expect(Fue::Shell).to receive(:system!).with('git config user.name').and_return('')
+      expect(subject.username).to be_nil
+    end
 
-      it 'chomps username' do
-        expect(Fue::Shell).to receive(:system!).with('git config user.name').and_return("user\n")
-        expect(subject).not_to receive(:prompt_username)
-        expect(subject.username).to eq 'user'
-      end
+    it 'returns nil without git' do
+      expect(Fue::Shell).to receive(:system!).with('git config user.name').and_raise(Errno::ENOENT, 'git')
+      expect(subject.username).to be_nil
+    end
+
+    it 'returns and chomps the git username' do
+      expect(Fue::Shell).to receive(:system!).with('git config user.name').and_return("user\n")
+      expect(subject.username).to eq 'user'
+    end
+
+    it 'does not prompt' do
+      expect(Fue::Shell).to receive(:system!).with('git config user.name').and_return(nil)
+      expect($stdin).not_to receive(:gets)
+      expect { subject.username }.not_to output.to_stdout
     end
   end
 
@@ -83,6 +74,26 @@ describe Fue::Auth do
       expect(Fue::Shell).to receive(:system!).with('gh auth token').and_raise(Errno::ENOENT, 'gh')
       expect(Fue::Security).not_to receive(:get)
       expect { auth.token }.to raise_error Fue::Auth::TokenNotFoundError, /gh auth login/
+    end
+
+    it 'does not look up a username when the GitHub CLI has a token' do
+      expect(Fue::Shell).to receive(:system!).with('gh auth token').and_return('gh-token')
+      expect(Fue::Shell).not_to receive(:system!).with('git config user.name')
+      expect(auth.token).to eq 'gh-token'
+    end
+
+    it 'uses a configured username for the keychain' do
+      auth.username = 'configured'
+      expect(Fue::Shell).to receive(:system!).with('gh auth token').and_raise(Errno::ENOENT, 'gh')
+      expect(Fue::Security).to receive(:get).with(keychain_options.merge(username: 'configured')).and_return('stored')
+      expect(auth.token).to eq 'stored'
+    end
+
+    it 'skips the keychain without a username' do
+      allow(Fue::Shell).to receive(:system!).with('git config user.name').and_return(nil)
+      expect(Fue::Shell).to receive(:system!).with('gh auth token').and_raise(Errno::ENOENT, 'gh')
+      expect(Fue::Security).not_to receive(:get)
+      expect { auth.token }.to raise_error Fue::Auth::TokenNotFoundError
     end
 
     it 'raises an error when no token is found' do
