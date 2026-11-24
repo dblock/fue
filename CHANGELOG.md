@@ -1,5 +1,6 @@
 ### 0.6.0 (Next)
 
+* [#50](https://github.com/dblock/fue/pull/50): Use the GitHub CLI token with `gh auth token`, and stop prompting for and saving tokens in the macOS keychain; fixes fue on Linux - [@dblock](https://github.com/dblock).
 * [#48](https://github.com/dblock/fue/pull/48): `--depth` looks through more than 100 commits in each repository - [@dblock](https://github.com/dblock).
 * [#47](https://github.com/dblock/fue/pull/47): Added `--[no-]names` to display only e-mail addresses - [@dblock](https://github.com/dblock).
 * [#46](https://github.com/dblock/fue/pull/46): `fue find` searches forks when the user has no commits in their own repositories - [@dblock](https://github.com/dblock).

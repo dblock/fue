@@ -19,7 +19,14 @@ class App
 
   pre do |global_options, _command, _options, _args|
     options = global_options.dup
-    token = options.delete(:token) || Fue::Auth.instance.token
+    token = options.delete(:token)
+    if token
+      source = '--token or GITHUB_ACCESS_TOKEN'
+    else
+      token = Fue::Auth.instance.token
+      source = Fue::Auth.instance.token_source
+    end
+    puts "Using a GitHub token from #{source}." if global_options[:verbose]
     $fue = Fue::Finder.new(token, options)
   end
 
