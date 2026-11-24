@@ -1,5 +1,6 @@
 ### 0.6.0 (Next)
 
+* [#54](https://github.com/dblock/fue/pull/54): Added `fue mentions` to list contributors without an e-mail address to @mention - [@dblock](https://github.com/dblock).
 * [#53](https://github.com/dblock/fue/pull/53): `fue contributors` skips contributors without e-mail addresses, e.g. with `--no-noreply` - [@dblock](https://github.com/dblock).
 * [#51](https://github.com/dblock/fue/pull/51): Added Windows support and CI using the GitHub CLI token, and stopped prompting for a GitHub username - [@dblock](https://github.com/dblock).
 * [#50](https://github.com/dblock/fue/pull/50): Use the GitHub CLI token with `gh auth token`, and stop prompting for and saving tokens in the macOS keychain; fixes fue on Linux - [@dblock](https://github.com/dblock).

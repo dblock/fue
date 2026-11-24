@@ -39,6 +39,31 @@ module Fue
     end
 
     def contributors(options = {})
+      contributor_logins(options).filter_map do |login|
+        login_emails = emails(options.merge(username: login))
+        # skip contributors without e-mail addresses, e.g. with only excluded @users.noreply.github.com ones
+        [login, login_emails] unless login_emails.empty?
+      rescue StandardError => e
+        warn e
+      end.to_h
+    end
+
+    # @logins of contributors without an e-mail address other than @users.noreply.github.com ones,
+    # or of all contributors with all: true, without bots
+    def mentions(options = {})
+      logins = contributor_logins(options).reject { |login| login.end_with?('[bot]') }
+      return logins.map { |login| "@#{login}" } if options[:all]
+
+      logins.filter_map do |login|
+        "@#{login}" if emails(options.merge(username: login, exclude_noreply: true)).empty?
+      rescue StandardError => e
+        warn e
+      end
+    end
+
+    private
+
+    def contributor_logins(options)
       query = <<-GRAPHQL
         query($owner: String!, $name: String!, $cursor: String) {
           repository(owner: $owner, name: $name) {
@@ -89,16 +114,8 @@ module Fue
 
       puts " found #{logins.size} contributor#{'s' unless logins.size == 1}." if options[:verbose]
 
-      logins.filter_map do |login|
-        login_emails = emails(options.merge(username: login))
-        # skip contributors without e-mail addresses, e.g. with only excluded @users.noreply.github.com ones
-        [login, login_emails] unless login_emails.empty?
-      rescue StandardError => e
-        warn e
-      end.to_h
+      logins.to_a
     end
-
-    private
 
     def repository_emails(query_options, options)
       query = <<-GRAPHQL
