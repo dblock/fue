@@ -1,5 +1,6 @@
 ### 0.6.0 (Next)
 
+* [#44](https://github.com/dblock/fue/pull/44): Added release automation with ruby-gem-release and RubyGems Trusted Publishing - [@dblock](https://github.com/dblock).
 * [#43](https://github.com/dblock/fue/pull/43): Upgraded to danger/danger-pr-comment 0.3.0 and stopped commenting on pull requests without Danger issues - [@dblock](https://github.com/dblock).
 * [#41](https://github.com/dblock/fue/pull/41): Modernized CI with separate Test, Lint, and Package workflows, testing Ruby 3.0 and 4.0 on Linux and macOS, and removed AppVeyor - [@dblock](https://github.com/dblock).
 * [#40](https://github.com/dblock/fue/pull/40): Upgraded RuboCop to 1.92, added rubocop-performance and rubocop-prose to lint Markdown, and fixed a `NoMethodError` when paging contributors of a repository without history - [@dblock](https://github.com/dblock).

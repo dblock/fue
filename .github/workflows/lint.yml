@@ -13,7 +13,7 @@ jobs:
     name: RuboCop
     runs-on: ubuntu-latest
     env:
-      BUNDLE_WITHOUT: danger
+      BUNDLE_WITHOUT: 'danger:release'
     steps:
       - uses: actions/checkout@v7
         with:
