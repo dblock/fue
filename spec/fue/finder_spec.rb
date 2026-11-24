@@ -186,6 +186,16 @@ describe Fue::Finder do
       )
     end
 
+    it 'skips contributors without e-mail addresses',
+       vcr: { cassette_name: 'github/contributors/opensearch-project/opensearch-sdk-py' } do
+      allow(finder).to receive(:emails).and_return(['someone@example.com'])
+      allow(finder).to receive(:emails).with(hash_including(username: 'ignacia-kihn')).and_return([])
+      contributors = finder.contributors(repo: 'opensearch-project/opensearch-sdk-py', exclude_noreply: true)
+      expect(contributors.keys).to eq(
+        ['mend-for-github-com[bot]', 'dependabot[bot]', 'isaac_gerlach', 'carroll', 'dblock']
+      )
+    end
+
     it 'finds e-mails', vcr: { cassette_name: 'github/contributors/opensearch-project/opensearch-sdk-py' } do
       expect(finder.contributors(repo: 'opensearch-project/opensearch-sdk-py')).to eq(
         'ignacia-kihn' => [

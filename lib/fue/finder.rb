@@ -90,7 +90,9 @@ module Fue
       puts " found #{logins.size} contributor#{'s' unless logins.size == 1}." if options[:verbose]
 
       logins.filter_map do |login|
-        [login, emails(options.merge(username: login))]
+        login_emails = emails(options.merge(username: login))
+        # skip contributors without e-mail addresses, e.g. with only excluded @users.noreply.github.com ones
+        [login, login_emails] unless login_emails.empty?
       rescue StandardError => e
         warn e
       end.to_h
