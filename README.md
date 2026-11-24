@@ -15,6 +15,7 @@ Fue is short for "Finding Unicorn Engineers".
   - [Commands](#commands)
     - [Find Someone’s Email](#find-someones-email)
     - [Find All Repo Contributors’ Emails](#find-all-repo-contributors-emails)
+    - [Find Repo Contributors to Mention](#find-repo-contributors-to-mention)
   - [Options](#options)
     - [Exclude No-Reply Emails](#exclude-no-reply-emails)
     - [Exclude Emails from Signed-off-by](#exclude-emails-from-signed-off-by)
@@ -56,6 +57,17 @@ $ fue --verbose contributors defunkt/colored
 
 defunkt: Chris Wanstrath <chris@ozmm.org>
 kch: Caio Chassot <kch@users.noreply.github.com>
+```
+
+#### Find Repo Contributors to Mention
+
+The `mentions` command lists the GitHub `@login` of each repo contributor without an e-mail address other than a `@users.noreply.github.com` one, so you can @mention them instead. Use `--all` to list all contributors. Bots are skipped.
+
+```sh
+$ fue mentions dblock/iex-ruby-client
+
+@esarmstrong
+@tylerhaugen-stanley-amount
 ```
 
 ### Options

@@ -215,4 +215,28 @@ describe Fue::Finder do
       )
     end
   end
+
+  describe '#mentions' do
+    let(:repo) { 'opensearch-project/opensearch-sdk-py' }
+
+    it 'mentions contributors without an e-mail address',
+       vcr: { cassette_name: 'github/contributors/opensearch-project/opensearch-sdk-py' } do
+      allow(finder).to receive(:emails).and_return(['someone@example.com'])
+      expect(finder).to receive(:emails).with(hash_including(username: 'carroll', exclude_noreply: true)).and_return([])
+      expect(finder.mentions(repo: repo)).to eq ['@carroll']
+    end
+
+    it 'mentions all contributors without bots',
+       vcr: { cassette_name: 'github/contributors/opensearch-project/opensearch-sdk-py' } do
+      expect(finder).not_to receive(:emails)
+      expect(finder.mentions(repo: repo, all: true)).to eq ['@isaac_gerlach', '@carroll', '@ignacia-kihn', '@dblock']
+    end
+
+    it 'skips contributors whose e-mail addresses cannot be found',
+       vcr: { cassette_name: 'github/contributors/opensearch-project/opensearch-sdk-py' } do
+      allow(finder).to receive(:emails).and_return([])
+      expect(finder).to receive(:emails).with(hash_including(username: 'dblock')).and_raise('Not Found')
+      expect { expect(finder.mentions(repo: repo)).not_to include '@dblock' }.to output(/Not Found/).to_stderr
+    end
+  end
 end

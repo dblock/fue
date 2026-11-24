@@ -58,6 +58,24 @@ class App
     end
   end
 
+  desc 'Find GitHub repo contributors to @mention because they have no public e-mail address.'
+  arg 'repo'
+  command :mentions do |c|
+    c.flag %i[d depth], desc: 'Maximum search depth in each repository for a given user.', default_value: 1
+    c.flag %i[b breadth], desc: 'Maximum number of repositories to search.', default_value: 10
+    c.switch %i[signed-off-by], desc: 'Include e-mail addresses from Signed-off-by.', default_value: true
+    c.switch %i[all], desc: 'Mention all contributors.', default_value: false, negatable: false
+    c.action do |global_options, options, args|
+      repo = args.first
+      options[:depth] = options[:depth].to_i
+      options[:breadth] = options[:breadth].to_i
+      options[:exclude_signed_off_by] = !options.delete(:'signed-off-by')
+      puts "Searching for contributors to mention in '#{repo}' ..." if global_options[:verbose]
+      puts $fue.mentions(options.merge(repo: repo, verbose: global_options[:verbose]))
+      exit_now! nil, 0
+    end
+  end
+
   desc "Find a GitHub repo contributors' e-mail addresses."
   arg 'repo'
   command :contributors do |c|
