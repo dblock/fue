@@ -7,6 +7,8 @@ Find e-mail addresses of a Github users from their commit logs.
 
 Fue is short for "Finding Unicorn Engineers".
 
+Try [fue-rs](https://github.com/dblock/fue-rs), a faster Rust port of fue with prebuilt binaries for macOS, Linux, and Windows, installed with `brew install dblock/tap/fue`. It searches profiles, recent activity, commit history, and `Signed-off-by` lines in a single `fue <user|owner/repo>` command.
+
 ![Fue finding e-mail addresses in a terminal.](images/fue.gif)
 
 ## Table of Contents

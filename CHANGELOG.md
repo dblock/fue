@@ -1,5 +1,6 @@
 ### 0.6.2 (Next)
 
+* [#61](https://github.com/dblock/fue/pull/61): Point to [fue-rs](https://github.com/dblock/fue-rs), the Rust port of fue - [@dblock](https://github.com/dblock).
 * Your contribution here.
 
 ### 0.6.1 (2026/11/24)
