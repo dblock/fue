@@ -20,8 +20,8 @@ module Fue
         run << "#{command}-internet-password"
         run << "-a #{Shellwords.escape(options[:username])}"
         run << "-s #{Shellwords.escape(options[:server])}"
+        run << "-l #{Shellwords.escape(options[:label])}" if options[:label]
         if command == 'add'
-          run << "-l #{Shellwords.escape(options[:label])}"
           run << '-U'
           run << "-w #{Shellwords.escape(options[:password])}" if options.key?(:password)
         else
