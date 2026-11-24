@@ -1,0 +1,36 @@
+name: Package
+on:
+  push:
+    branches: [master]
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  package:
+    name: Package
+    runs-on: ubuntu-latest
+    env:
+      BUNDLE_WITHOUT: 'lint:danger'
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Set Up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '4.0'
+          bundler-cache: true
+      - name: Build Gem
+        run: bundle exec rake build
+      - name: Install Gem in a Clean Consumer
+        run: |
+          consumer="$RUNNER_TEMP/consumer"
+          mkdir -p "$consumer"
+          cd "$consumer"
+          export GEM_HOME="$consumer/gems" GEM_PATH="$consumer/gems"
+          gem install --no-document "$GITHUB_WORKSPACE"/pkg/fue-*.gem
+          "$GEM_HOME/bin/fue" --version
+          "$GEM_HOME/bin/fue" help find
