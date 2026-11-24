@@ -50,6 +50,17 @@ describe Fue do
       end
     end
 
+    describe 'help find' do
+      subject do
+        Fue::Shell.system!(['ruby', %("#{fue}"), 'help', 'find'].join(' '))
+      end
+
+      it 'defaults to 10 commits in 100 repositories' do
+        expect(subject).to match(/--breadth=arg\s+- Maximum number of repositories to search\. \(default:\s+100\)/)
+        expect(subject).to match(/--depth=arg\s+- Maximum search depth in each repository\. \(default:\s+10\)/)
+      end
+    end
+
     describe 'help' do
       subject do
         Fue::Shell.system!(['ruby', %("#{fue}"), 'help'].join(' '))
