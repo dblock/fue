@@ -27,6 +27,15 @@ describe Fue::Finder do
       )
     end
 
+    it 'excludes names', vcr: { cassette_name: 'github/find/defunkt' } do
+      expect(finder.emails(username: 'defunkt', breadth: 50, exclude_names: true)).to eq(
+        [
+          '2+defunkt@users.noreply.github.com',
+          'chris@ozmm.org'
+        ]
+      )
+    end
+
     it 'adjusts depth and breadth, then searches forks when nothing was found' do
       expect(finder).to receive(:author_id).and_return('MDQ6VXNlcjI=')
       expect(finder.send(:graphql_client)).to receive(:query).with(
@@ -116,6 +125,24 @@ describe Fue::Finder do
         ],
         'isaac_gerlach' => ['Isaac Gerlach <otelia@rolfson.test>'],
         'carroll' => ['Hobert Ondricka <yolande_simonis@mckenzie.example>']
+      )
+    end
+
+    it 'excludes names', vcr: { cassette_name: 'github/contributors/opensearch-project/opensearch-sdk-py' } do
+      expect(finder.contributors(repo: 'opensearch-project/opensearch-sdk-py', exclude_names: true)).to eq(
+        'ignacia-kihn' => [
+          '83948568+ignacia-kihn@users.noreply.github.com',
+          'catina.barton@senger.test'
+        ],
+        'dblock' => [
+          'dblock@dblock.org',
+          'dblock@example.com'
+        ],
+        'isaac_gerlach' => [
+          'otelia@rolfson.test',
+          'otelia-signed-by@rolfson.test'
+        ],
+        'carroll' => ['yolande_simonis@mckenzie.example']
       )
     end
 

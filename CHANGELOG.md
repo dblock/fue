@@ -1,5 +1,6 @@
 ### 0.6.0 (Next)
 
+* [#47](https://github.com/dblock/fue/pull/47): Added `--[no-]names` to display only e-mail addresses - [@dblock](https://github.com/dblock).
 * [#46](https://github.com/dblock/fue/pull/46): `fue find` searches forks when the user has no commits in their own repositories - [@dblock](https://github.com/dblock).
 * [#45](https://github.com/dblock/fue/pull/45): Fixed using a GitHub token stored in the keychain by another tool, such as ghi - [@dblock](https://github.com/dblock).
 * [#44](https://github.com/dblock/fue/pull/44): Added release automation with ruby-gem-release and RubyGems Trusted Publishing - [@dblock](https://github.com/dblock).
