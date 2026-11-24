@@ -104,6 +104,7 @@ module Fue
           user(login: $login) {
             repositories(last: $breadth, after: $cursor, isFork: $is_fork, privacy: PUBLIC) {
               nodes {
+                nameWithOwner
                 defaultBranchRef {
                   target {
                     ... on Commit {
@@ -114,6 +115,10 @@ module Fue
                             name
                           },
                           messageBody
+                        }
+                        pageInfo {
+                          hasNextPage
+                          endCursor
                         }
                       }
                     }
@@ -130,29 +135,19 @@ module Fue
 
       # max number of repositories to search
       max_breadth = options[:breadth] || 10
-      query_options = query_options.merge(is_fork: options[:is_fork], cursor: nil)
+      # max number of commits to look into in each repository, GitHub returns at most 100 at a time
+      max_depth = query_options[:depth]
+      query_options = query_options.merge(is_fork: options[:is_fork], cursor: nil, depth: [max_depth, 100].min)
       emails = Set.new
 
       loop do
         query_options[:breadth] = [max_breadth, 100].min
         response = graphql_client.query(query, query_options)
         repositories = response&.data&.user&.repositories
-        repositories&.nodes&.each do |history|
-          default_history = history.default_branch_ref&.target&.history
-          default_history&.nodes&.each do |node|
-            unless noreply?(node.author.email) && options[:exclude_noreply]
-              emails << format_email(node.author.name, node.author.email, options)
-            end
-
-            next if options[:exclude_signed_off_by]
-
-            node.message_body.match(/^Signed-off-by: (?<email>[^\r\n]*)$/) do |m|
-              email = m[:email]
-              next if noreply?(email) && options[:exclude_noreply]
-
-              emails << (options[:exclude_names] ? email[/<([^>]+)>/, 1] || email : email)
-            end
-          end
+        repositories&.nodes&.each do |repository|
+          history = repository.default_branch_ref&.target&.history
+          add_history_emails(emails, history, options)
+          more_history_emails(emails, repository, history, query_options[:author_id], max_depth - 100, options)
         end
         query_options[:cursor] = repositories&.page_info&.start_cursor
         break unless query_options[:cursor]
@@ -164,6 +159,71 @@ module Fue
       end
 
       emails
+    end
+
+    # pages through a repository's history beyond the first 100 commits
+    def more_history_emails(emails, repository, history, author_id, remaining, options)
+      query = <<-GRAPHQL
+        query($owner: String!, $name: String!, $author_id: ID!, $depth: Int!, $cursor: String) {
+          repository(owner: $owner, name: $name) {
+            defaultBranchRef {
+              target {
+                ... on Commit {
+                  history(first: $depth, after: $cursor, author: { id: $author_id }) {
+                    nodes {
+                      author {
+                        email
+                        name
+                      },
+                      messageBody
+                    }
+                    pageInfo {
+                      hasNextPage
+                      endCursor
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      GRAPHQL
+
+      return unless remaining.positive?
+
+      owner, name = repository.name_with_owner.to_s.split('/', 2)
+
+      while remaining.positive? && history&.page_info&.has_next_page
+        response = graphql_client.query(
+          query,
+          owner: owner,
+          name: name,
+          author_id: author_id,
+          depth: [remaining, 100].min,
+          cursor: history.page_info.end_cursor
+        )
+        history = response&.data&.repository&.default_branch_ref&.target&.history
+        add_history_emails(emails, history, options)
+        remaining -= 100
+        $stdout.write '.' if options[:verbose]
+      end
+    end
+
+    def add_history_emails(emails, history, options)
+      history&.nodes&.each do |node|
+        unless noreply?(node.author.email) && options[:exclude_noreply]
+          emails << format_email(node.author.name, node.author.email, options)
+        end
+
+        next if options[:exclude_signed_off_by]
+
+        node.message_body.match(/^Signed-off-by: (?<email>[^\r\n]*)$/) do |m|
+          email = m[:email]
+          next if noreply?(email) && options[:exclude_noreply]
+
+          emails << (options[:exclude_names] ? email[/<([^>]+)>/, 1] || email : email)
+        end
+      end
     end
 
     def format_email(name, email, options)
