@@ -20,38 +20,6 @@ module Fue
     end
 
     def emails(options = {})
-      query = <<-GRAPHQL
-        query($login: String!, $author_id: ID!, $depth: Int!, $breadth: Int!, $cursor: String) {
-          user(login: $login) {
-            repositories(last: $breadth, after: $cursor, isFork:false, privacy: PUBLIC) {
-              nodes {
-                defaultBranchRef {
-                  target {
-                    ... on Commit {
-                      history(first: $depth, author: { id: $author_id }) {
-                        nodes {
-                          author {
-                            email
-                            name
-                          },
-                          messageBody
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-              pageInfo {
-                startCursor
-              }
-            }
-          }
-        }
-      GRAPHQL
-
-      # max number of repositories to search
-      max_breadth = options[:breadth] || 10
-
       query_options = {
         login: options[:username],
         author_id: author_id(options[:username]),
@@ -61,35 +29,9 @@ module Fue
 
       $stdout.write "Searching for emails for #{options[:username]} ." if options[:verbose]
 
-      emails = Set.new
-
-      loop do
-        query_options[:breadth] = [max_breadth, 100].min
-        response = graphql_client.query(query, query_options)
-        repositories = response&.data&.user&.repositories
-        repositories&.nodes&.each do |history|
-          default_history = history.default_branch_ref&.target&.history
-          default_history&.nodes&.each do |node|
-            unless noreply?(node.author.email) && options[:exclude_noreply]
-              emails << "#{node.author.name} <#{node.author.email}>"
-            end
-
-            next if options[:exclude_signed_off_by]
-
-            node.message_body.match(/^Signed-off-by: (?<email>[^\r\n]*)$/) do |m|
-              email = m[:email]
-              emails << email unless noreply?(email) && options[:exclude_noreply]
-            end
-          end
-        end
-        query_options[:cursor] = repositories&.page_info&.start_cursor
-        break unless query_options[:cursor]
-
-        max_breadth -= 100
-        break if max_breadth <= 0
-
-        $stdout.write '.' if options[:verbose]
-      end
+      emails = repository_emails(query_options, options.merge(is_fork: false))
+      # users who only commit to their forks, see https://github.com/dblock/fue/issues/26
+      emails = repository_emails(query_options, options.merge(is_fork: true)) if emails.empty?
 
       puts " found #{emails.size} email address#{'es' unless emails.size == 1}." if options[:verbose]
 
@@ -155,6 +97,72 @@ module Fue
     end
 
     private
+
+    def repository_emails(query_options, options)
+      query = <<-GRAPHQL
+        query($login: String!, $author_id: ID!, $depth: Int!, $breadth: Int!, $cursor: String, $is_fork: Boolean!) {
+          user(login: $login) {
+            repositories(last: $breadth, after: $cursor, isFork: $is_fork, privacy: PUBLIC) {
+              nodes {
+                defaultBranchRef {
+                  target {
+                    ... on Commit {
+                      history(first: $depth, author: { id: $author_id }) {
+                        nodes {
+                          author {
+                            email
+                            name
+                          },
+                          messageBody
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              pageInfo {
+                startCursor
+              }
+            }
+          }
+        }
+      GRAPHQL
+
+      # max number of repositories to search
+      max_breadth = options[:breadth] || 10
+      query_options = query_options.merge(is_fork: options[:is_fork], cursor: nil)
+      emails = Set.new
+
+      loop do
+        query_options[:breadth] = [max_breadth, 100].min
+        response = graphql_client.query(query, query_options)
+        repositories = response&.data&.user&.repositories
+        repositories&.nodes&.each do |history|
+          default_history = history.default_branch_ref&.target&.history
+          default_history&.nodes&.each do |node|
+            unless noreply?(node.author.email) && options[:exclude_noreply]
+              emails << "#{node.author.name} <#{node.author.email}>"
+            end
+
+            next if options[:exclude_signed_off_by]
+
+            node.message_body.match(/^Signed-off-by: (?<email>[^\r\n]*)$/) do |m|
+              email = m[:email]
+              emails << email unless noreply?(email) && options[:exclude_noreply]
+            end
+          end
+        end
+        query_options[:cursor] = repositories&.page_info&.start_cursor
+        break unless query_options[:cursor]
+
+        max_breadth -= 100
+        break if max_breadth <= 0
+
+        $stdout.write '.' if options[:verbose]
+      end
+
+      emails
+    end
 
     def noreply?(email)
       email.include?('@users.noreply.github.com')

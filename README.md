@@ -35,7 +35,7 @@ gem install fue
 
 #### Find Someone's Email
 
-The `find` command looks through user's initial repository commits.
+The `find` command looks through user's initial repository commits. When none of the user's own repositories have their commits, it also looks through their forks.
 
 ```sh
 $ fue --verbose find defunkt

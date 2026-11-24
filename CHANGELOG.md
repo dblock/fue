@@ -1,5 +1,6 @@
 ### 0.6.0 (Next)
 
+* [#46](https://github.com/dblock/fue/pull/46): `fue find` searches forks when the user has no commits in their own repositories - [@dblock](https://github.com/dblock).
 * [#45](https://github.com/dblock/fue/pull/45): Fixed using a GitHub token stored in the keychain by another tool, such as ghi - [@dblock](https://github.com/dblock).
 * [#44](https://github.com/dblock/fue/pull/44): Added release automation with ruby-gem-release and RubyGems Trusted Publishing - [@dblock](https://github.com/dblock).
 * [#43](https://github.com/dblock/fue/pull/43): Upgraded to danger/danger-pr-comment 0.3.0 and stopped commenting on pull requests without Danger issues - [@dblock](https://github.com/dblock).

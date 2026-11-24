@@ -27,13 +27,21 @@ describe Fue::Finder do
       )
     end
 
-    it 'adjusts depth and breadth' do
+    it 'adjusts depth and breadth, then searches forks when nothing was found' do
       expect(finder).to receive(:author_id).and_return('MDQ6VXNlcjI=')
       expect(finder.send(:graphql_client)).to receive(:query).with(
         kind_of(String),
-        hash_including(depth: 1, breadth: 2)
-      ).and_return(nil)
-      finder.emails(username: 'defunkt', depth: 1, breadth: 2)
+        hash_including(depth: 1, breadth: 2, is_fork: false)
+      ).ordered.and_return(nil)
+      expect(finder.send(:graphql_client)).to receive(:query).with(
+        kind_of(String),
+        hash_including(depth: 1, breadth: 2, is_fork: true)
+      ).ordered.and_return(nil)
+      expect(finder.emails(username: 'defunkt', depth: 1, breadth: 2)).to eq([])
+    end
+
+    it 'finds e-mails in forks', vcr: { cassette_name: 'github/find/lundefugl' } do
+      expect(finder.emails(username: 'lundefugl')).to eq(['lundefugl <montgomery_scott@gmx.de>'])
     end
 
     it 'paginates over more than 100 items', vcr: { cassette_name: 'github/find/defunkt_breadth_142' } do
