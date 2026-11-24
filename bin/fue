@@ -36,8 +36,8 @@ class App
   desc "Find a GitHub user's e-mail address."
   arg 'username'
   command :find do |c|
-    c.flag %i[d depth], desc: 'Maximum search depth in each repository.', default_value: 1
-    c.flag %i[b breadth], desc: 'Maximum number of repositories to search.', default_value: 10
+    c.flag %i[d depth], desc: 'Maximum search depth in each repository.', default_value: 10
+    c.flag %i[b breadth], desc: 'Maximum number of repositories to search.', default_value: 100
     c.switch %i[noreply], desc: 'Include @users.noreply.github.com e-mail addresses.', default_value: true
     c.switch %i[signed-off-by], desc: 'Include e-mail addresses from Signed-off-by.', default_value: true
     c.switch %i[names], desc: 'Include names with e-mail addresses.', default_value: true

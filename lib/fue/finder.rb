@@ -2,6 +2,9 @@
 
 module Fue
   class Finder
+    # GitHub times out or truncates responses with many more commits, stay well below that
+    MAX_COMMITS_PER_REQUEST = 200
+
     attr_reader :token
 
     def initialize(token, _options = {})
@@ -121,7 +124,7 @@ module Fue
       query = <<-GRAPHQL
         query($login: String!, $author_id: ID!, $depth: Int!, $breadth: Int!, $cursor: String, $is_fork: Boolean!) {
           user(login: $login) {
-            repositories(last: $breadth, after: $cursor, isFork: $is_fork, privacy: PUBLIC) {
+            repositories(last: $breadth, before: $cursor, isFork: $is_fork, privacy: PUBLIC) {
               nodes {
                 nameWithOwner
                 defaultBranchRef {
@@ -146,6 +149,7 @@ module Fue
               }
               pageInfo {
                 startCursor
+                hasPreviousPage
               }
             }
           }
@@ -156,28 +160,45 @@ module Fue
       max_breadth = options[:breadth] || 10
       # max number of commits to look into in each repository, GitHub returns at most 100 at a time
       max_depth = query_options[:depth]
-      query_options = query_options.merge(is_fork: options[:is_fork], cursor: nil, depth: [max_depth, 100].min)
+      depth = [max_depth, 100].min
+      query_options = query_options.merge(is_fork: options[:is_fork], cursor: nil, depth: depth)
+      # repositories per request, fewer when looking into more commits in each
+      page_size = (MAX_COMMITS_PER_REQUEST / depth).clamp(1, 100)
       emails = Set.new
 
-      loop do
-        query_options[:breadth] = [max_breadth, 100].min
-        response = graphql_client.query(query, query_options)
+      while max_breadth.positive?
+        query_options[:breadth] = [max_breadth, page_size].min
+        response = query_with_retry(query, query_options) do
+          page_size = [page_size / 2, 1].max
+          query_options[:breadth] = [max_breadth, page_size].min
+        end
         repositories = response&.data&.user&.repositories
         repositories&.nodes&.each do |repository|
           history = repository.default_branch_ref&.target&.history
           add_history_emails(emails, history, options)
           more_history_emails(emails, repository, history, query_options[:author_id], max_depth - 100, options)
         end
-        query_options[:cursor] = repositories&.page_info&.start_cursor
-        break unless query_options[:cursor]
+        # repositories are listed oldest first, page backwards from the most recent
+        break unless repositories&.page_info&.has_previous_page
 
-        max_breadth -= 100
-        break if max_breadth <= 0
+        query_options[:cursor] = repositories.page_info.start_cursor
+        max_breadth -= query_options[:breadth]
 
         $stdout.write '.' if options[:verbose]
       end
 
       emails
+    end
+
+    # Retries a request that GitHub could not complete, after the block makes it smaller.
+    def query_with_retry(query, query_options)
+      graphql_client.query(query, query_options)
+    rescue Graphlient::Errors::TimeoutError, Faraday::ParsingError, Graphlient::Errors::FaradayServerError => e
+      raise if e.is_a?(Graphlient::Errors::FaradayServerError) && e.status_code.to_i < 500
+      raise if query_options[:breadth] <= 1
+
+      yield
+      retry
     end
 
     # pages through a repository's history beyond the first 100 commits
@@ -249,8 +270,9 @@ module Fue
       options[:exclude_names] ? email : "#{name} <#{email}>"
     end
 
+    # GitHub's addresses that don't receive e-mail, including noreply@github.com on commits made on github.com
     def noreply?(email)
-      email.include?('@users.noreply.github.com')
+      email.include?('@users.noreply.github.com') || email.include?('noreply@github.com')
     end
 
     def graphql_client

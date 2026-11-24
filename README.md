@@ -74,7 +74,7 @@ $ fue mentions dblock/iex-ruby-client
 
 #### Exclude No-Reply Emails
 
-By default `fue find` and `fue contributors` will include no-reply emails such as `kch@users.noreply.github.com`. Exclude those with `--no-noreply`.
+By default `fue find` and `fue contributors` will include no-reply emails such as `kch@users.noreply.github.com` and `noreply@github.com`, which GitHub uses for some commits made on github.com. Exclude those with `--no-noreply`.
 
 ```sh
 fue find --no-noreply kch
@@ -106,7 +106,7 @@ fue find --no-names defunkt
 
 #### Specify More Depth
 
-By default the code looks at 1 commit from the last 10 repositories. You can look at more repositories (breadth) and more commits (depth). GitHub returns at most 100 repositories or commits at a time, so fue pages through larger values of breadth and depth.
+By default `fue find` looks at 10 commits in each of the last 100 repositories, which takes 5 requests to GitHub. `fue contributors` and `fue mentions` search each contributor's last 10 repositories, 1 commit each, in 1 request per contributor. You can look at more repositories (breadth) and more commits (depth). Fue pages through larger values of breadth and depth and keeps each request to GitHub small, so any value works and larger values just take longer. For example, `--breadth=1000 --depth=100` searches all of a user's public repositories; for a user with several hundred repositories this takes a couple of minutes and uses a few hundred of the 5,000 points GitHub allows per hour. `fue contributors` and `fue mentions` run such a search for each contributor.
 
 ```sh
 $ fue find --breadth=100 --depth=5 defunkt
