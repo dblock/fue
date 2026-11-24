@@ -28,6 +28,8 @@ Fue is short for "Finding Unicorn Engineers".
 
 ## Usage
 
+Fue runs on macOS, Linux, and Windows with Ruby 3.0 or newer.
+
 ```sh
 gem install fue
 ```
@@ -115,7 +117,7 @@ Displays additional options.
 Fue needs a GitHub token and looks for one in this order.
 
 1. The `--token` (`-t`) option or the `GITHUB_ACCESS_TOKEN` environment variable.
-2. The [GitHub CLI](https://cli.github.com/), with `gh auth token`. Run `gh auth login` once and fue uses it on macOS and Linux without storing a token itself.
+2. The [GitHub CLI](https://cli.github.com/), with `gh auth token`. Run `gh auth login` once and fue uses it on macOS, Linux, and Windows without storing a token itself.
 3. A token saved in the macOS keychain by fue 0.5.0 and older.
 
 Run with `--verbose` to see which token fue uses. Fue only reads public data, so any token with access to public repositories works, including one created with `public_repo` scope in [GitHub personal access token settings](https://github.com/settings/tokens).
