@@ -24,12 +24,19 @@ describe Fue do
     describe 'without a token' do
       it 'explains how to authenticate' do
         Dir.mktmpdir do |dir|
-          gh = File.join(dir, 'gh')
-          File.write(gh, "#!/bin/sh\necho 'no oauth token found for github.com' >&2\nexit 1\n")
-          File.chmod(0o755, gh)
-          # only a logged out gh and ruby, no git or security
+          if Gem.win_platform?
+            gh = "@echo off\r\necho no oauth token found for github.com 1>&2\r\nexit /b 1\r\n"
+            File.write(File.join(dir, 'gh.cmd'), gh)
+          else
+            gh = File.join(dir, 'gh')
+            File.write(gh, "#!/bin/sh\necho 'no oauth token found for github.com' >&2\nexit 1\n")
+            File.chmod(0o755, gh)
+          end
+          # only a logged out gh, ruby, and the Windows system directory, no git or security
+          path = [dir, RbConfig::CONFIG['bindir']]
+          path << File.join(ENV.fetch('SystemRoot'), 'System32') if Gem.win_platform?
           env = {
-            'PATH' => [dir, RbConfig::CONFIG['bindir']].join(File::PATH_SEPARATOR),
+            'PATH' => path.join(File::PATH_SEPARATOR),
             'GITHUB_ACCESS_TOKEN' => nil,
             'GH_TOKEN' => nil,
             'GITHUB_TOKEN' => nil
@@ -38,6 +45,7 @@ describe Fue do
           expect(status).not_to be_success
           expect(stderr).to include Fue::Auth::TokenNotFoundError.new.message
           expect(stdout).not_to include 'Token saved'
+          expect(stdout).not_to include 'Enter GitHub username'
         end
       end
     end

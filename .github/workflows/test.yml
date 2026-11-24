@@ -18,6 +18,7 @@ jobs:
           - { ruby: '3.0', os: ubuntu-latest }
           - { ruby: '4.0', os: ubuntu-latest }
           - { ruby: '4.0', os: macos-latest }
+          - { ruby: '4.0', os: windows-latest }
     name: Test (Ruby ${{ matrix.entry.ruby }}, ${{ matrix.entry.os }})
     env:
       BUNDLE_WITHOUT: 'lint:danger:release'
@@ -32,3 +33,12 @@ jobs:
           bundler-cache: true
       - name: Run Tests
         run: bundle exec rake spec
+      - name: Find E-mail Addresses with the GitHub CLI Token
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          output=$(bundle exec ruby bin/fue --verbose find dblock)
+          echo "$output"
+          grep -q 'Using a GitHub token from gh auth token.' <<< "$output"
+          grep -q '@' <<< "$output"

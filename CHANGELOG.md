@@ -1,5 +1,6 @@
 ### 0.6.0 (Next)
 
+* [#51](https://github.com/dblock/fue/pull/51): Added Windows support and CI using the GitHub CLI token, and stopped prompting for a GitHub username - [@dblock](https://github.com/dblock).
 * [#50](https://github.com/dblock/fue/pull/50): Use the GitHub CLI token with `gh auth token`, and stop prompting for and saving tokens in the macOS keychain; fixes fue on Linux - [@dblock](https://github.com/dblock).
 * [#48](https://github.com/dblock/fue/pull/48): `--depth` looks through more than 100 commits in each repository - [@dblock](https://github.com/dblock).
 * [#47](https://github.com/dblock/fue/pull/47): Added `--[no-]names` to display only e-mail addresses - [@dblock](https://github.com/dblock).

@@ -12,13 +12,14 @@ class App
 
   switch %i[v verbose], desc: 'Produce verbose output.', default_value: false
   flag %i[t token], desc: 'GitHub access token.', default_value: ENV.fetch('GITHUB_ACCESS_TOKEN', nil)
-  flag %i[u username], desc: 'GitHub username.', default_value: Fue::Auth.instance.username
+  flag %i[u username], desc: 'Username of a token saved in the macOS keychain, defaults to git config user.name.'
 
   arguments :strict
   subcommand_option_handling :normal
 
   pre do |global_options, _command, _options, _args|
     options = global_options.dup
+    Fue::Auth.instance.username = options[:username] if options[:username]
     token = options.delete(:token)
     if token
       source = '--token or GITHUB_ACCESS_TOKEN'

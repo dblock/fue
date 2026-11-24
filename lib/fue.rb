@@ -2,7 +2,6 @@
 
 require 'graphlient'
 require 'open3'
-require 'English'
 require 'shellwords'
 
 require 'fue/version'
