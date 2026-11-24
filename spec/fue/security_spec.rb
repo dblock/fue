@@ -7,7 +7,7 @@ describe Fue::Security do
     allow(described_class).to receive(:security_path).and_return('security-exec')
   end
 
-  context '#store!' do
+  describe '#store!' do
     it 'returns an add command line' do
       expect(Fue::Shell).to receive(:system!).with(
         'security-exec add-internet-password -a user -s server -l label -U -w password'
@@ -16,7 +16,7 @@ describe Fue::Security do
     end
   end
 
-  context 'get' do
+  describe '#get' do
     it 'returns a find command line' do
       expect(Fue::Shell).to receive(:system!).with(
         'security-exec find-internet-password -a user -s server -w'

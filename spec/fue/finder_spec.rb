@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe Fue::Finder do
   let(:token) { ENV['GITHUB_ACCESS_TOKEN'] || 'token' }
-  let(:finder) { Fue::Finder.new(token) }
+  let(:finder) { described_class.new(token) }
   let(:graphql_client) { finder.send(:graphql_client) }
 
   describe '#find' do

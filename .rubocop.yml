@@ -1,8 +1,17 @@
+plugins:
+  - rubocop-performance
+  - rubocop-prose
+  - rubocop-rake
+  - rubocop-rspec
+
 AllCops:
   TargetRubyVersion: 3.0
   NewCops: enable
   Exclude:
-    - vendor/**/*
+    - 'vendor/**/*'
+    - 'pkg/**/*'
+    - 'spec/support/fixtures/**/*'
+    - 'LICENSE.md'
 
 Style/Documentation:
   Enabled: false
@@ -13,8 +22,34 @@ Metrics:
 Layout/EndOfLine:
   EnforcedStyle: lf
 
-inherit_from: .rubocop_todo.yml
+# The GLI pre hook shares the finder with command actions.
+Style/GlobalVars:
+  AllowedVariables:
+    - $fue
 
-require:
-  - rubocop-rspec
-  - rubocop-rake
+# GraphQL responses are deeply nested optional objects.
+Style/SafeNavigationChainLength:
+  Enabled: false
+
+# Specs set expectations on collaborators (shell, keychain, GraphQL) with mocks.
+RSpec/MessageSpies:
+  Enabled: false
+
+RSpec/StubbedMock:
+  Enabled: false
+
+RSpec/SubjectStub:
+  Enabled: false
+
+RSpec/ExpectInHook:
+  Enabled: false
+
+# Recorded VCR examples keep related assertions together.
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/NamedSubject:
+  Enabled: false

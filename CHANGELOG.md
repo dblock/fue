@@ -1,5 +1,6 @@
 ### 0.6.0 (Next)
 
+* [#40](https://github.com/dblock/fue/pull/40): Upgraded RuboCop to 1.92, added rubocop-performance and rubocop-prose to lint Markdown, and fixed a `NoMethodError` when paging contributors of a repository without history - [@dblock](https://github.com/dblock).
 * [#39](https://github.com/dblock/fue/pull/39): Fix `unknown keyword: quirks_mode` and Faraday JSON errors with json 3.x by upgrading to graphlient 0.9 (Faraday 2) and graphql 2.6.8+, and removing the unused github_api dependency - [@dblock](https://github.com/dblock).
 * [#38](https://github.com/dblock/fue/pull/38): Migrate Danger to use danger-pr-comment workflow - [@dblock](https://github.com/dblock).
 * [#37](https://github.com/dblock/fue/pull/36): Added fetching of e-mails from `Signed-off-by` and `--[no-]signed-off-by` - [@dblock](https://github.com/dblock).

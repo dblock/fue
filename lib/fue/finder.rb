@@ -74,11 +74,11 @@ module Fue
               emails << "#{node.author.name} <#{node.author.email}>"
             end
 
-            unless options[:exclude_signed_off_by]
-              node.message_body.match(/^Signed-off-by: (?<email>[^\r\n]*)$/) do |m|
-                email = m[:email]
-                emails << email unless noreply?(email) && options[:exclude_noreply]
-              end
+            next if options[:exclude_signed_off_by]
+
+            node.message_body.match(/^Signed-off-by: (?<email>[^\r\n]*)$/) do |m|
+              email = m[:email]
+              emails << email unless noreply?(email) && options[:exclude_noreply]
             end
           end
         end
@@ -91,7 +91,7 @@ module Fue
         $stdout.write '.' if options[:verbose]
       end
 
-      puts " found #{emails.size} email address#{emails.size == 1 ? '' : 'es'}." if options[:verbose]
+      puts " found #{emails.size} email address#{'es' unless emails.size == 1}." if options[:verbose]
 
       emails.to_a
     end
@@ -140,18 +140,18 @@ module Fue
           login = node.author.user&.login
           logins << login if login
         end
-        query_options[:cursor] = history&.page_info.end_cursor
+        query_options[:cursor] = history&.page_info&.end_cursor
         $stdout.write '.' if options[:verbose]
         break unless query_options[:cursor]
       end
 
-      puts " found #{logins.size} contributor#{logins.size == 1 ? '' : 's'}." if options[:verbose]
+      puts " found #{logins.size} contributor#{'s' unless logins.size == 1}." if options[:verbose]
 
-      logins.map do |login|
+      logins.filter_map do |login|
         [login, emails(options.merge(username: login))]
       rescue StandardError => e
         warn e
-      end.compact.to_h
+      end.to_h
     end
 
     private

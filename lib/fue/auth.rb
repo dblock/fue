@@ -19,8 +19,8 @@ module Fue
 
     def username
       @username ||= begin
-        username = get_git_username&.chomp
-        username = get_username if username.nil? || username.empty?
+        username = git_username&.chomp
+        username = prompt_username if username.nil? || username.empty?
         username
       end
     end
@@ -29,16 +29,16 @@ module Fue
 
     def github_token(_code = nil)
       puts 'Create a personal access token on https://github.com/settings/tokens and paste it here: '
-      get_secure
+      read_secure
     end
 
-    def get_git_username
+    def git_username
       Fue::Shell.system!('git config user.name')
     rescue RuntimeError
       nil
     end
 
-    def get_username
+    def prompt_username
       print 'Enter GitHub username: '
       username = $stdin.gets
       username&.chomp
@@ -46,10 +46,10 @@ module Fue
       raise e, 'ctrl + c'
     end
 
-    def get_secure
+    def read_secure
       current_tty = `stty -g`
       system 'stty raw -echo -icanon isig' if $CHILD_STATUS.success?
-      input = String.new
+      input = +''
       while (char = $stdin.getbyte) && !((char == 13) || (char == 10))
         if (char == 127) || (char == 8)
           input[-1, 1] = '' unless input.empty?
