@@ -26,6 +26,6 @@ end
 group :danger do
   gem 'danger', require: false
   gem 'danger-changelog', require: false
-  gem 'danger-pr-comment', require: false
+  gem 'danger-pr-comment', '~> 0.3', require: false
   gem 'danger-toc', require: false
 end
