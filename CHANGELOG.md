@@ -1,3 +1,7 @@
+### 0.6.1 (Next)
+
+* Your contribution here.
+
 ### 0.6.0 (2026/11/24)
 
 * [#54](https://github.com/dblock/fue/pull/54): Added `fue mentions` to list contributors without an e-mail address to @mention - [@dblock](https://github.com/dblock).
