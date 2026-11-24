@@ -12,12 +12,15 @@ group :development, :test do
   gem 'webmock'
 end
 
-group :lint do
-  gem 'rubocop', '~> 1.92'
-  gem 'rubocop-performance', require: false
-  gem 'rubocop-prose', '~> 0.2', require: false
-  gem 'rubocop-rake', require: false
-  gem 'rubocop-rspec', require: false
+# rubocop-prose requires Ruby 3.2 or newer; Bundler resolves every group, even with BUNDLE_WITHOUT.
+if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.2')
+  group :lint do
+    gem 'rubocop', '~> 1.92'
+    gem 'rubocop-performance', require: false
+    gem 'rubocop-prose', '~> 0.2', require: false
+    gem 'rubocop-rake', require: false
+    gem 'rubocop-rspec', require: false
+  end
 end
 
 group :danger do

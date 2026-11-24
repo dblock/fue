@@ -1,7 +1,7 @@
 Fue
 ===
 
-[![Gem Version](https://badge.fury.io/rb/fue.svg)](https://badge.fury.io/rb/fue) [![Tests](https://github.com/dblock/fue/actions/workflows/test.yml/badge.svg)](https://github.com/dblock/fue/actions/workflows/test.yml)
+[![Gem Version](https://badge.fury.io/rb/fue.svg)](https://badge.fury.io/rb/fue) [![Tests](https://github.com/dblock/fue/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/dblock/fue/actions/workflows/test.yml) [![Lint](https://github.com/dblock/fue/actions/workflows/lint.yml/badge.svg)](https://github.com/dblock/fue/actions/workflows/lint.yml) [![Package](https://github.com/dblock/fue/actions/workflows/package.yml/badge.svg)](https://github.com/dblock/fue/actions/workflows/package.yml)
 
 Find e-mail addresses of a Github users from their commit logs.
 
