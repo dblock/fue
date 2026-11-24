@@ -18,9 +18,9 @@ Gem::Specification.new do |s|
   s.licenses = ['MIT']
   s.summary = 'Find an e-mail address of a GitHub user.'
   s.required_ruby_version = '>= 3.0'
+  s.add_dependency 'command_line'
   s.add_dependency 'gli', '~> 2.17'
   s.add_dependency 'graphlient', '~> 0.9'
   s.add_dependency 'graphql', '>= 2.6.8'
-  s.add_dependency 'command_line'
   s.metadata['rubygems_mfa_required'] = 'true'
 end

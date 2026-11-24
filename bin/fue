@@ -17,7 +17,7 @@ class App
   arguments :strict
   subcommand_option_handling :normal
 
-  pre do |global_options, _command, options, _args|
+  pre do |global_options, _command, _options, _args|
     options = global_options.dup
     token = options.delete(:token) || Fue::Auth.instance.token
     $fue = Fue::Finder.new(token, options)

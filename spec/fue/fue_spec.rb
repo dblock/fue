@@ -5,7 +5,7 @@ require 'spec_helper'
 describe Fue do
   let(:fue) { File.expand_path(File.join(__FILE__, '../../../bin/fue')) }
 
-  context 'find' do
+  describe 'find' do
     describe 'default' do
       subject do
         Fue::Shell.system!(['ruby', %("#{fue}")].join(' '))

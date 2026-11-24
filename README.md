@@ -1,14 +1,13 @@
 Fue
 ===
 
-[![Gem Version](https://badge.fury.io/rb/fue.svg)](https://badge.fury.io/rb/fue)
-[![Tests](https://github.com/dblock/fue/actions/workflows/test.yml/badge.svg)](https://github.com/dblock/fue/actions/workflows/test.yml)
+[![Gem Version](https://badge.fury.io/rb/fue.svg)](https://badge.fury.io/rb/fue) [![Tests](https://github.com/dblock/fue/actions/workflows/test.yml/badge.svg)](https://github.com/dblock/fue/actions/workflows/test.yml)
 
 Find e-mail addresses of a Github users from their commit logs.
 
 Fue is short for "Finding Unicorn Engineers".
 
-![](images/fue.gif)
+![Fue finding e-mail addresses in a terminal.](images/fue.gif)
 
 ## Table of Contents
 
@@ -25,9 +24,10 @@ Fue is short for "Finding Unicorn Engineers".
 - [Debugging](#debugging)
 - [Contributing](#contributing)
 - [Copyright and License](#copyright-and-license)
+
 ## Usage
 
-```
+```sh
 gem install fue
 ```
 
@@ -37,7 +37,7 @@ gem install fue
 
 The `find` command looks through user's initial repository commits.
 
-```
+```sh
 $ fue --verbose find defunkt
 
 Chris Wanstrath <chris@ozmm.org>
@@ -48,7 +48,7 @@ Chris Wanstrath <chris@github.com>
 
 The `contributors` command looks through a git log of contributors, then fetches their e-mails.
 
-```
+```sh
 $ fue --verbose contributors defunkt/colored
 
 defunkt: Chris Wanstrath <chris@ozmm.org>
@@ -61,11 +61,11 @@ kch: Caio Chassot <kch@users.noreply.github.com>
 
 By default `fue find` and `fue contributors` will include no-reply emails such as `kch@users.noreply.github.com`. Exclude those with `--no-noreply`.
 
-```
+```sh
 fue find --no-noreply kch
 ```
 
-```
+```sh
 fue --verbose contributors --no-noreply defunkt/colored
 ```
 
@@ -73,11 +73,11 @@ fue --verbose contributors --no-noreply defunkt/colored
 
 By default `fue find` and `fue contributors` will include emails gathered from `Signed-off-by` text in commit descriptions. Exclude those with `--no-signed-off-by`.
 
-```
+```sh
 fue find --no-signed-off-by defunkt
 ```
 
-```
+```sh
 fue --verbose contributors --no-signed-off-by defunkt/colored
 ```
 
@@ -85,7 +85,7 @@ fue --verbose contributors --no-signed-off-by defunkt/colored
 
 By default the code looks at 1 commit from the last 10 repositories. You can look at more repositories (breadth) and more commits (depth). The maximum value for depth is 100, enforced by Github. Fue will iterate over a number of repositories larger than 100.
 
-```
+```sh
 $ fue find --breadth=100 --depth=5 defunkt
 
 Chris Wanstrath <chris@ozmm.org>
@@ -95,7 +95,7 @@ defunkt <chris@ozmm.org>
 
 ### Get Help
 
-```
+```sh
 fue help
 ```
 
@@ -103,7 +103,7 @@ Displays additional options.
 
 ### Access Tokens
 
-Fue will ask you to create a personal access token and will store it in the keychain. The access token should be created with `public_repo` scope [here](https://github.com/settings/tokens). You can also skip the prompts and use a previously obtained token with `-t` or by setting the `GITHUB_ACCESS_TOKEN` environment variable.
+Fue will ask you to create a personal access token and will store it in the keychain. The access token should be created with `public_repo` scope in [GitHub personal access token settings](https://github.com/settings/tokens). You can also skip the prompts and use a previously obtained token with `-t` or by setting the `GITHUB_ACCESS_TOKEN` environment variable.
 
 See [Creating a Personal Access Token for the Command Line](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line) for more information about personal tokens.
 
@@ -111,7 +111,7 @@ See [Creating a Personal Access Token for the Command Line](https://help.github.
 
 If you run into an unexpected error, try getting a stack trace with `GLI_DEBUG=true`.
 
-```
+```text
 $ GLI_DEBUG=true fue find dblock
 
 FrozenError: can't modify frozen String
