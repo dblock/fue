@@ -7,15 +7,6 @@ describe Fue::Security do
     allow(described_class).to receive(:security_path).and_return('security-exec')
   end
 
-  describe '#store!' do
-    it 'returns an add command line' do
-      expect(Fue::Shell).to receive(:system!).with(
-        'security-exec add-internet-password -a user -s server -l label -U -w password'
-      )
-      subject.store!(username: 'user', server: 'server', password: 'password', label: 'label')
-    end
-  end
-
   describe '#get' do
     it 'returns a find command line' do
       expect(Fue::Shell).to receive(:system!).with(
@@ -29,6 +20,11 @@ describe Fue::Security do
         'security-exec find-internet-password -a user -s server -l fue -w'
       )
       subject.get(username: 'user', server: 'server', label: 'fue')
+    end
+
+    it 'returns nil when the security command is not available' do
+      expect(Fue::Shell).to receive(:system!).and_raise(Errno::ENOENT, 'security-exec')
+      expect(subject.get(username: 'user', server: 'server', label: 'fue')).to be_nil
     end
 
     it 'quotes usernames' do

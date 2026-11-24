@@ -2,19 +2,21 @@
 
 module Fue
   class Auth
+    class TokenNotFoundError < StandardError
+      def initialize
+        super('No GitHub token found. Run `gh auth login`, or pass --token or set GITHUB_ACCESS_TOKEN.')
+      end
+    end
+
+    attr_reader :token_source
+
     def self.instance
       @instance ||= new
     end
 
+    # A token from the GitHub CLI, or one saved in the macOS keychain by fue 0.5.0 and older.
     def token
-      stored_options = { username: username, server: 'github.com', label: 'fue' }
-      stored_token = Fue::Security.get(stored_options)
-      unless stored_token
-        stored_token = github_token
-        Fue::Security.store!(stored_options.merge(password: stored_token))
-        puts 'Token saved to keychain.'
-      end
-      stored_token
+      @token ||= find_token
     end
 
     def username
@@ -27,14 +29,33 @@ module Fue
 
     private
 
-    def github_token(_code = nil)
-      puts 'Create a personal access token on https://github.com/settings/tokens and paste it here: '
-      read_secure
+    def find_token
+      if (token = gh_token)
+        @token_source = 'gh auth token'
+      elsif (token = keychain_token)
+        @token_source = 'the macOS keychain'
+      else
+        raise TokenNotFoundError
+      end
+      token
+    end
+
+    def gh_token
+      token = Fue::Shell.system!('gh auth token')
+      token unless token.nil? || token.empty?
+    rescue RuntimeError, SystemCallError
+      nil
+    end
+
+    def keychain_token
+      return unless RUBY_PLATFORM.include?('darwin')
+
+      Fue::Security.get(username: username, server: 'github.com', label: 'fue')
     end
 
     def git_username
       Fue::Shell.system!('git config user.name')
-    rescue RuntimeError
+    rescue RuntimeError, SystemCallError
       nil
     end
 
@@ -44,26 +65,6 @@ module Fue
       username&.chomp
     rescue Interrupt => e
       raise e, 'ctrl + c'
-    end
-
-    def read_secure
-      current_tty = `stty -g`
-      system 'stty raw -echo -icanon isig' if $CHILD_STATUS.success?
-      input = +''
-      while (char = $stdin.getbyte) && !((char == 13) || (char == 10))
-        if (char == 127) || (char == 8)
-          input[-1, 1] = '' unless input.empty?
-        else
-          $stdout.write '*'
-          input << char.chr
-        end
-      end
-      print "\r\n"
-      input
-    rescue Interrupt => e
-      raise e, 'ctrl + c'
-    ensure
-      system "stty #{current_tty}" unless current_tty.empty?
     end
   end
 end

@@ -21,7 +21,7 @@ Fue is short for "Finding Unicorn Engineers".
     - [Exclude Names](#exclude-names)
     - [Specify More Depth](#specify-more-depth)
   - [Get Help](#get-help)
-  - [Access Tokens](#access-tokens)
+  - [Authentication](#authentication)
 - [Debugging](#debugging)
 - [Contributing](#contributing)
 - [Copyright and License](#copyright-and-license)
@@ -110,24 +110,22 @@ fue help
 
 Displays additional options.
 
-### Access Tokens
+### Authentication
 
-Fue will ask you to create a personal access token and will store it in the keychain. The access token should be created with `public_repo` scope in [GitHub personal access token settings](https://github.com/settings/tokens). You can also skip the prompts and use a previously obtained token with `-t` or by setting the `GITHUB_ACCESS_TOKEN` environment variable.
+Fue needs a GitHub token and looks for one in this order.
 
-See [Creating a Personal Access Token for the Command Line](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line) for more information about personal tokens.
+1. The `--token` (`-t`) option or the `GITHUB_ACCESS_TOKEN` environment variable.
+2. The [GitHub CLI](https://cli.github.com/), with `gh auth token`. Run `gh auth login` once and fue uses it on macOS and Linux without storing a token itself.
+3. A token saved in the macOS keychain by fue 0.5.0 and older.
+
+Run with `--verbose` to see which token fue uses. Fue only reads public data, so any token with access to public repositories works, including one created with `public_repo` scope in [GitHub personal access token settings](https://github.com/settings/tokens).
 
 ## Debugging
 
 If you run into an unexpected error, try getting a stack trace with `GLI_DEBUG=true`.
 
-```text
-$ GLI_DEBUG=true fue find dblock
-
-FrozenError: can't modify frozen String
-  /Users/dblock/source/dblock/fue/lib/fue/auth.rb:97:in `get_secure'
-  /Users/dblock/source/dblock/fue/lib/fue/auth.rb:80:in `get_password'
-  /Users/dblock/source/dblock/fue/lib/fue/auth.rb:50:in `password'
-  /Users/dblock/source/dblock/fue/lib/fue/auth.rb:59:in `block in github'
+```sh
+GLI_DEBUG=true fue find dblock
 ```
 
 ## Contributing
