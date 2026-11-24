@@ -1,3 +1,7 @@
+### 0.6.2 (Next)
+
+* Your contribution here.
+
 ### 0.6.1 (2026/11/24)
 
 * [#59](https://github.com/dblock/fue/pull/59): Only include `Signed-off-by` addresses of the commit author, and all of them, not just the first - [@dblock](https://github.com/dblock).
